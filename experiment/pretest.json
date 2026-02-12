@@ -2,35 +2,256 @@
   "version": 2.0,
   "questions": [
     {
-      "question": "This is a Sample Question 1?",
+      "question": "What is the main architectural approach used in the 5G Core Network?",
       "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
+        "a": "Monolithic Architecture",
+        "b": "Service-Based Architecture (SBA)",
+        "c": "Circuit-Switched Architecture",
+        "d": "Peer-to-Peer Architecture"
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "a": "Incorrect — Monolithic architectures were used in 4G and earlier systems.",
+        "b": "Correct — 5G Core uses a Service-Based Architecture where Network Functions (NFs) communicate via APIs.",
+        "c": "Incorrect — Circuit-Switched is used in legacy telephony systems.",
+        "d": "Incorrect — Peer-to-Peer is not a standardized 5G architecture."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "In 5G, which separation allows independent scaling of control and data processing?",
+      "answers": {
+        "a": "Core and Access Separation",
+        "b": "Control and User Plane Separation (CUPS)",
+        "c": "Service and Application Separation",
+        "d": "Network and Cloud Separation"
+      },
+      "explanations": {
+        "a": "Incorrect — Core and Access Separation is not the key concept here.",
+        "b": "Correct — CUPS enables independent scaling and flexibility between control and user plane functions.",
+        "c": "Incorrect — Service and Application Separation is a software concept, not specific to 5G.",
+        "d": "Incorrect — Network and Cloud Separation is unrelated to control-user plane separation."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Which network function acts as the primary control plane gateway for the User Equipment (UE)?",
+      "answers": {
+        "a": "SMF",
+        "b": "UPF",
+        "c": "AMF",
+        "d": "AUSF"
+      },
+      "explanations": {
+        "a": "Incorrect — SMF manages sessions, not direct UE connections.",
+        "b": "Incorrect — UPF is part of the user plane.",
+        "c": "Correct — AMF (Access and Mobility Management Function) manages UE registration, authentication, and mobility.",
+        "d": "Incorrect — AUSF handles authentication verification only."
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "The AMF communicates with the UE over which interface?",
+      "answers": {
+        "a": "N1",
+        "b": "N2",
+        "c": "N3",
+        "d": "N4"
+      },
+      "explanations": {
+        "a": "Correct — N1 is the control interface between UE and AMF for signaling.",
+        "b": "Incorrect — N2 connects gNB and AMF.",
+        "c": "Incorrect — N3 connects gNB and UPF.",
+        "d": "Incorrect — N4 connects SMF and UPF."
       },
       "correctAnswer": "a",
       "difficulty": "beginner"
     },
     {
-      "question": "This is a Sample Question 2?",
+      "question": "Which function is responsible for establishing and managing PDU sessions?",
       "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
+        "a": "UDM",
+        "b": "PCF",
+        "c": "SMF",
+        "d": "AMF"
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "a": "Incorrect — UDM stores user subscription data.",
+        "b": "Incorrect — PCF defines policies but doesn’t create sessions.",
+        "c": "Correct — SMF (Session Management Function) handles session setup, modification, and release.",
+        "d": "Incorrect — AMF coordinates signaling but not session management."
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "What is the main role of the UPF in the 5G Core Network?",
+      "answers": {
+        "a": "Authentication",
+        "b": "Policy Enforcement",
+        "c": "Data Packet Routing and Forwarding",
+        "d": "Service Discovery"
+      },
+      "explanations": {
+        "a": "Incorrect — Authentication is handled by AUSF and UDM.",
+        "b": "Partially correct — UPF enforces policies but primarily routes packets.",
+        "c": "Correct — UPF (User Plane Function) routes and forwards user data between RAN and Data Network.",
+        "d": "Incorrect — Service Discovery is managed by NRF."
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Which interface connects the SMF to the UPF for session configuration?",
+      "answers": {
+        "a": "N3",
+        "b": "N4",
+        "c": "N6",
+        "d": "N9"
+      },
+      "explanations": {
+        "a": "Incorrect — N3 connects gNB and UPF.",
+        "b": "Correct — N4 connects SMF and UPF using PFCP protocol for control.",
+        "c": "Incorrect — N6 connects UPF to external networks.",
+        "d": "Incorrect — N9 connects multiple UPFs."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "The AUSF works closely with which other function to authenticate users?",
+      "answers": {
+        "a": "PCF",
+        "b": "UDM",
+        "c": "UPF",
+        "d": "SMF"
+      },
+      "explanations": {
+        "a": "Incorrect — PCF handles policies, not authentication.",
+        "b": "Correct — AUSF collaborates with UDM for user authentication data verification.",
+        "c": "Incorrect — UPF is unrelated to authentication.",
+        "d": "Incorrect — SMF manages sessions."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "What is the main purpose of the UDM?",
+      "answers": {
+        "a": "Policy Management",
+        "b": "Service Registration",
+        "c": "Subscriber Data and Credential Management",
+        "d": "Packet Routing"
+      },
+      "explanations": {
+        "a": "Incorrect — PCF handles policy management.",
+        "b": "Incorrect — NRF handles service registration.",
+        "c": "Correct — UDM stores and manages user subscription, profile, and credentials.",
+        "d": "Incorrect — UPF handles packet routing."
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Which function defines and enforces network policies such as QoS and charging?",
+      "answers": {
+        "a": "AMF",
+        "b": "SMF",
+        "c": "PCF",
+        "d": "UDM"
+      },
+      "explanations": {
+        "a": "Incorrect — AMF handles mobility and registration.",
+        "b": "Incorrect — SMF configures sessions.",
+        "c": "Correct — PCF (Policy Control Function) manages policies, QoS, and charging rules.",
+        "d": "Incorrect — UDM stores subscriber data."
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "The NRF is responsible for:",
+      "answers": {
+        "a": "Forwarding User Packets",
+        "b": "Managing UE Authentication",
+        "c": "Service Discovery and Function Registration",
+        "d": "Allocating IP Addresses"
+      },
+      "explanations": {
+        "a": "Incorrect — UPF forwards user packets.",
+        "b": "Incorrect — AUSF handles authentication.",
+        "c": "Correct — NRF (Network Repository Function) registers and enables discovery of NFs in the 5G Core.",
+        "d": "Incorrect — SMF allocates IP addresses."
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Which interface allows the UPF to communicate with external data networks like the Internet?",
+      "answers": {
+        "a": "N4",
+        "b": "N6",
+        "c": "N9",
+        "d": "N2"
+      },
+      "explanations": {
+        "a": "Incorrect — N4 connects SMF and UPF.",
+        "b": "Correct — N6 connects UPF to external data networks like the Internet.",
+        "c": "Incorrect — N9 connects two UPFs.",
+        "d": "Incorrect — N2 connects RAN and AMF."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "What protocol is typically used on the N3 interface between RAN and UPF?",
+      "answers": {
+        "a": "PFCP",
+        "b": "GTP-U",
+        "c": "HTTP/2",
+        "d": "NGAP"
+      },
+      "explanations": {
+        "a": "Incorrect — PFCP is used on N4 between SMF and UPF.",
+        "b": "Correct — GTP-U carries user plane data on N3 between gNB and UPF.",
+        "c": "Incorrect — HTTP/2 is used for SBA communication between NFs.",
+        "d": "Incorrect — NGAP is used on N2 between gNB and AMF."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Which of the following is NOT a control plane function?",
+      "answers": {
+        "a": "AMF",
+        "b": "SMF",
+        "c": "UPF",
+        "d": "AUSF"
+      },
+      "explanations": {
+        "a": "Incorrect — AMF is control plane.",
+        "b": "Incorrect — SMF is control plane.",
+        "c": "Correct — UPF is the only user plane function in the 5G Core.",
+        "d": "Incorrect — AUSF is control plane."
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Why is the Service-Based Architecture (SBA) advantageous for 5G Core Networks?",
+      "answers": {
+        "a": "It uses hardware-specific implementations",
+        "b": "It makes the network monolithic",
+        "c": "It allows modular, scalable, and independent network functions",
+        "d": "It restricts communication between NFs"
+      },
+      "explanations": {
+        "a": "Incorrect — SBA is software-based, not hardware-dependent.",
+        "b": "Incorrect — SBA breaks monolithic structure.",
+        "c": "Correct — SBA enables modularity, scalability, and flexibility between NFs.",
+        "d": "Incorrect — SBA promotes open API-based NF communication."
       },
       "correctAnswer": "c",
       "difficulty": "beginner"
