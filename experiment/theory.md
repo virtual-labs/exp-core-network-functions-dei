@@ -9,7 +9,7 @@ The core network architecture is strategically divided into two distinct planes:
 
 This architectural separation, known as Control and User Plane Separation (CUPS), enables flexible deployment strategies and optimized resource utilization.
 
-![5G Core Network Service-Based Architecture](images/fig-1.png)
+<img src="images/fig-1.svg" alt="5G Core Network Service-Based Architecture" width="40%">
 
 *Fig: 5G Core Network Service-Based Architecture*
 
@@ -65,10 +65,6 @@ While Docker manages individual containers, Kubernetes orchestrates containerize
 * Container Runtime: Container execution
 * Kube-proxy: Network rules management
 
-![Kubernetes Architecture for 5G Core Network Deployment](images/fig-10.png)
-
-*Fig: Kubernetes Architecture for 5G Core Network Deployment*
-
 </details>
 
 <details>
@@ -96,7 +92,7 @@ While Docker manages individual containers, Kubernetes orchestrates containerize
 * **N12**: Communication with AUSF for authentication
 * **N15**: Communication with PCF for policy decisions
 
-![AMF Functions and Interface Connections](images/fig-2.png)
+<img src="images/fig-2.svg" alt="AMF Functions and Interface Connections" width="40%">
 
 *Fig: AMF Functions and Interface Connections*
 
@@ -122,7 +118,7 @@ While Docker manages individual containers, Kubernetes orchestrates containerize
 * **N10**: Communication with UDM for subscription data
 * **N11**: Communication with AMF for session signaling
 
-![SMF Functions and Interface Connections](images/fig-3.png)
+<img src="images/fig-3.svg" alt="SMF Functions and Interface Connections" width="40%">
 
 *Fig: SMF Functions and Interface Connections*
 
@@ -148,7 +144,7 @@ While Docker manages individual containers, Kubernetes orchestrates containerize
 * **N6**: Communication with Data Network (Internet/Enterprise networks)
 * **N9**: Communication with other UPFs for distributed deployments
 
-![UPF Data Plane Operations and Connections](images/fig-4.png)
+<img src="images/fig-4.svg" alt="UPF Data Plane Operations and Connections" width="40%">
 
 *Fig: UPF Data Plane Operations and Connections*
 
@@ -169,7 +165,7 @@ While Docker manages individual containers, Kubernetes orchestrates containerize
 * **N12**: Communication with AMF for authentication requests
 * **N13**: Communication with UDM for authentication credentials
 
-![AUSF Authentication Process and Connections](images/fig-5.png)
+<img src="images/fig-5.svg" alt="AUSF Authentication Process and Connections" width="40%">
 
 *Fig: AUSF Authentication Process and Connections*
 
@@ -193,7 +189,7 @@ While Docker manages individual containers, Kubernetes orchestrates containerize
 * **N13**: Communication with AUSF for authentication credentials
 * **N35**: Communication with UDR for data storage
 
-![UDM Data Management and Connections](images/fig-6.png)
+<img src="images/fig-6.svg" alt="UDM Data Management and Connections" width="40%">
 
 *Fig: UDM Data Management and Connections*
 
@@ -219,7 +215,7 @@ While Docker manages individual containers, Kubernetes orchestrates containerize
 * **N15**: Communication with AMF for access and mobility policies
 * **N36**: Communication with UDM for policy-related subscription data
 
-![PCF Policy Framework and Connections](images/fig-7.png)
+<img src="images/fig-7.svg" alt="PCF Policy Framework and Connections" width="40%">
 
 *Fig: PCF Policy Framework and Connections*
 
@@ -236,7 +232,7 @@ While Docker manages individual containers, Kubernetes orchestrates containerize
 * **Selection Support**: Helps select appropriate instances based on criteria
 * **Authorization**: Validates access tokens for service-based communication
 
-![NRF Service Discovery Architecture](images/fig-8.png)
+<img src="images/fig-8.svg" alt="NRF Service Discovery Architecture" width="40%">
 
 *Fig: NRF Service Discovery Architecture*
 
@@ -249,7 +245,7 @@ While Docker manages individual containers, Kubernetes orchestrates containerize
 
 All network functions collaborate through standardized interfaces to provide seamless mobile connectivity. The control plane functions (AMF, SMF, AUSF, UDM, PCF, NRF) manage signaling and policies, while the user plane function (UPF) handles actual data traffic. This modular architecture enables flexible deployment, independent scaling, and efficient resource utilization.
 
-![Complete 5G Core Network Function Interconnection Map](images/fig-9.png)
+<img src="images/fig-9.svg" alt="Complete 5G Core Network Function Interconnection Map" width="40%">
 
 *Fig: Complete 5G Core Network Function Interconnection Map*
 

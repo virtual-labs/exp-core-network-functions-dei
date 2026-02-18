@@ -1,7 +1,3 @@
-# 5G Core Network Setup using SBA Simulator
-
----
-
 ## Step 1: Initialize the Service-Based Architecture (SBA) Dashboard
 
 1. **Open the SBA Simulator Dashboard:**
