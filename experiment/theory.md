@@ -4,8 +4,10 @@ The 5G core network implements a Service-Based Architecture (SBA) that represent
 
 The core network architecture is strategically divided into two distinct planes:
 
-* **Control Plane**: Responsible for signaling, session management, and policy enforcement
-* **User Plane**: Handles actual data packet forwarding and routing
+<ol type="a">
+<li><b>Control Plane</b>: Responsible for signaling, session management, and policy enforcement</li>
+<li><b>User Plane</b>: Handles actual data packet forwarding and routing</li>
+</ol>
 
 This architectural separation, known as Control and User Plane Separation (CUPS), enables flexible deployment strategies and optimized resource utilization.
 
@@ -13,235 +15,248 @@ This architectural separation, known as Control and User Plane Separation (CUPS)
 
 *Fig: 5G Core Network Service-Based Architecture*
 
-</details>
-
-
-<details>
-<summary><strong>2. Containerization and Orchestration</strong></summary>
-
 ## 2. Containerization and Orchestration
+
+Containerization and orchestration technologies provide the foundational infrastructure for deploying and managing 5G core network functions in production environments. These technologies enable scalable, resilient, and efficient network function deployment.
 
 ### 2.1 Docker: Container Platform
 
 Docker has revolutionized application deployment by introducing lightweight, portable containers that package applications with all their dependencies. In 5G Core deployment, Docker provides several critical advantages.
 
-#### Key Docker Concepts:
-* **Container Images**: Read-only templates containing application code, runtime, libraries, and configuration files
-* **Containers**: Running instances of Docker images, providing isolated environments for network functions
-* **Docker Engine**: Runtime that creates and manages containers on the host operating system
-* **Docker Registry**: Repository for storing and distributing container images
+<ol type="a">
+  <li><b>Container Images</b>: Read-only templates containing application code, runtime, libraries, and configuration files.</li>
+  <li><b>Containers</b>: Running instances of Docker images, providing isolated environments for network functions.</li>
+  <li><b>Docker Engine</b>: Runtime that creates and manages containers on the host operating system.</li>
+  <li><b>Docker Registry</b>: Repository for storing and distributing container images.</li>
+</ol>
 
-#### Benefits for 5G Core Deployment:
-* **Isolation**: Each network function runs in its own container
-* **Portability**: Consistent execution across environments
-* **Resource Efficiency**: Shared host OS kernel
-* **Rapid Deployment**: Quick instantiation and scaling
-* **Version Control**: Support for multiple versions
+<h4>Benefits for 5G Core Deployment:</h4>
+<ol type="a">
+  <li><b>Isolation</b>: Each network function runs in its own container</li>
+  <li><b>Portability</b>: Consistent execution across environments</li>
+  <li><b>Resource Efficiency</b>: Shared host OS kernel</li>
+  <li><b>Rapid Deployment</b>: Quick instantiation and scaling</li>
+  <li><b>Version Control</b>: Support for multiple versions</li>
+</ol>
 
----
+<h3>2.2 Kubernetes: Container Orchestration</h3>
 
-### 2.2 Kubernetes: Container Orchestration
-
+<p>
 While Docker manages individual containers, Kubernetes orchestrates containerized applications across machine clusters, providing enterprise-level automation and reliability for production-grade 5G Core deployments.
+</p>
 
-#### Core Kubernetes Concepts:
-* **Pods**: Smallest deployable units containing network function containers
-* **Services**: Stable network endpoints and load balancing
-* **Deployments**: Declarative application state definitions
-* **ConfigMaps and Secrets**: Configuration and sensitive data management
-* **Namespaces**: Virtual cluster separation
-* **Ingress Controllers**: External access management
+<h4>Core Kubernetes Concepts:</h4>
+<ol type="a">
+  <li><b>Pods</b>: Smallest deployable units containing network function containers</li>
+  <li><b>Services</b>: Stable network endpoints and load balancing</li>
+  <li><b>Deployments</b>: Declarative application state definitions</li>
+  <li><b>ConfigMaps and Secrets</b>: Configuration and sensitive data management</li>
+  <li><b>Namespaces</b>: Virtual cluster separation</li>
+  <li><b>Ingress Controllers</b>: External access management</li>
+</ol>
 
-#### Kubernetes Architecture Components:
+<h4>Kubernetes Architecture Components:</h4>
 
-**Master Node (Control Plane)**:
-* API Server: Central management point
-* Scheduler: Pod assignment
-* Controller Manager: Cluster state maintenance
-* etcd: Configuration store
+- **Master Node (Control Plane):**
+<ol type="i">
+  <li>API Server: Central management point</li>
+  <li>Scheduler: Pod assignment</li>
+  <li>Controller Manager: Cluster state maintenance</li>
+  <li>etcd: Configuration store</li>
+</ol>
 
-**Worker Nodes**:
-* Kubelet: Pod management agent
-* Container Runtime: Container execution
-* Kube-proxy: Network rules management
-
-</details>
-
-<details>
-<summary><strong>3. Network Function Roles and Responsibilities</strong></summary>
+- **Worker Nodes:**
+<ol type="i">
+  <li>Kubelet: Pod management agent</li>
+  <li>Container Runtime: Container execution</li>
+  <li>Kube-proxy: Network rules management</li>
+</ol>
 
 ## 3. Network Function Roles and Responsibilities
+
+The 5G core network comprises multiple specialized network functions that work in coordination to provide seamless mobile connectivity, session management, authentication, and policy enforcement. Each function has specific roles and responsibilities within the overall architecture.
 
 ### 3.1 Access and Mobility Management Function (AMF)
 
 **Role**: Primary control plane gateway for user equipment (UE)
+<h4>Key Responsibilities:</h4>
+<ol type="a">
+  <li><b>Registration Management</b>: Handles UE registration and deregistration procedures</li>
+  <li><b>Connection Management</b>: Manages signaling connections between UE and core network</li>
+  <li><b>Mobility Management</b>: Tracks UE location and manages mobility events</li>
+  <li><b>Authentication Coordination</b>: Works with AUSF to authenticate UE during initial access</li>
+  <li><b>Network Slice Selection</b>: Selects appropriate network slice for UE based on subscription</li>
+  <li><b>SMF Selection</b>: Chooses suitable SMF for PDU session establishment</li>
+  <li><b>Paging Management</b>: Triggers paging when downlink data arrives for idle UEs</li>
+</ol>
 
-#### Key Responsibilities:
-* **Registration Management**: Handles UE registration and deregistration procedures
-* **Connection Management**: Manages signaling connections between UE and core network
-* **Mobility Management**: Tracks UE location and manages mobility events
-* **Authentication Coordination**: Works with AUSF to authenticate UE during initial access
-* **Network Slice Selection**: Selects appropriate network slice for UE based on subscription
-* **SMF Selection**: Chooses suitable SMF for PDU session establishment
-* **Paging Management**: Triggers paging when downlink data arrives for idle UEs
-
-#### Key Interfaces:
-* **N1**: Communication with UE (NAS signaling)
-* **N2**: Communication with RAN (NGAP protocol)
-* **N11**: Communication with SMF for session management
-* **N12**: Communication with AUSF for authentication
-* **N15**: Communication with PCF for policy decisions
+<h4>Key Interfaces:</h4>
+<ol type="a">
+  <li><b>N1</b>: Communication with UE (NAS signaling)</li>
+  <li><b>N2</b>: Communication with RAN (NGAP protocol)</li>
+  <li><b>N11</b>: Communication with SMF for session management</li>
+  <li><b>N12</b>: Communication with AUSF for authentication</li>
+  <li><b>N15</b>: Communication with PCF for policy decisions</li>
+</ol>
 
 <img src="images/fig-2.svg" alt="AMF Functions and Interface Connections" width="40%">
+<p><i>Fig: AMF Functions and Interface Connections</i></p>
 
-*Fig: AMF Functions and Interface Connections*
+<h3>3.2 Session Management Function (SMF)</h3>
+<p><b>Role</b>: Orchestrates all PDU (Protocol Data Unit) session operations</p>
 
----
+<h4>Key Responsibilities:</h4>
+<ol type="a">
+  <li><b>Session Management</b>:
+    <ol type="i">
+      <li>Establishment of new PDU sessions</li>
+      <li>Modification of session parameters</li>
+      <li>Termination of inactive sessions</li>
+    </ol>
+  </li>
+  <li><b>IP Address Allocation</b>: Assigns IP addresses to UE for data sessions</li>
+  <li><b>UPF Selection and Control</b>: Selects appropriate UPF and configures packet forwarding rules</li>
+  <li><b>QoS Management</b>: Applies Quality of Service policies to data flows</li>
+  <li><b>Charging Data Collection</b>: Gathers usage information for billing purposes</li>
+</ol>
 
-### 3.2 Session Management Function (SMF)
+<h4>Key Interfaces:</h4>
+<ol type="a">
+  <li><b>N4</b>: Communication with UPF (PFCP protocol) for session configuration</li>
+  <li><b>N7</b>: Communication with PCF for policy rules</li>
+  <li><b>N10</b>: Communication with UDM for subscription data</li>
+  <li><b>N11</b>: Communication with AMF for session signaling</li>
+</ol>
 
-**Role**: Orchestrates all PDU (Protocol Data Unit) session operations
+<img src="images/fig-3.svg" width="40%">
+<p><i>Fig: SMF Functions and Interface Connections</i></p>
 
-#### Key Responsibilities:
-* **Session Management**:
-  * Establishment of new PDU sessions
-  * Modification of session parameters
-  * Termination of inactive sessions
-* **IP Address Allocation**: Assigns IP addresses to UE for data sessions
-* **UPF Selection and Control**: Selects appropriate UPF and configures packet forwarding rules
-* **QoS Management**: Applies Quality of Service policies to data flows
-* **Charging Data Collection**: Gathers usage information for billing purposes
+<h3>3.3 User Plane Function (UPF)</h3>
+<p><b>Role</b>: Handles all user data packet processing and forwarding</p>
 
-#### Key Interfaces:
-* **N4**: Communication with UPF (PFCP protocol) for session configuration
-* **N7**: Communication with PCF for policy rules
-* **N10**: Communication with UDM for subscription data
-* **N11**: Communication with AMF for session signaling
+<h4>Key Responsibilities:</h4>
+<ol type="a">
+  <li><b>Packet Operations</b>:
+    <ol type="i">
+      <li>Routing between RAN and external networks</li>
+      <li>Forwarding based on SMF rules</li>
+      <li>Deep packet inspection for policy enforcement</li>
+    </ol>
+  </li>
+  <li><b>QoS Enforcement</b>: Applies traffic shaping and prioritization rules</li>
+  <li><b>Packet Buffering</b>: Buffers downlink packets for UEs in idle mode</li>
+  <li><b>Traffic Measurement</b>: Collects traffic statistics for reporting</li>
+  <li><b>Lawful Interception</b>: Supports legal data interception when required</li>
+</ol>
 
-<img src="images/fig-3.svg" alt="SMF Functions and Interface Connections" width="40%">
+<h4>Key Interfaces:</h4>
+<ol type="a">
+  <li><b>N3</b>: Communication with RAN (GTP-U protocol) for user data</li>
+  <li><b>N4</b>: Communication with SMF (PFCP protocol) for configuration</li>
+  <li><b>N6</b>: Communication with Data Network (Internet/Enterprise networks)</li>
+  <li><b>N9</b>: Communication with other UPFs for distributed deployments</li>
+</ol>
 
-*Fig: SMF Functions and Interface Connections*
+<img src="images/fig-4.svg" width="40%">
+<p><i>Fig: UPF Data Plane Operations and Connections</i></p>
 
----
+<h3>3.4 Authentication Server Function (AUSF)</h3>
+<p><b>Role</b>: Performs authentication services for UE network access</p>
 
-### 3.3 User Plane Function (UPF)
+<h4>Key Responsibilities:</h4>
+<ol type="a">
+  <li><b>UE Authentication</b>: Validates UE credentials during registration</li>
+  <li><b>Authentication Method Support</b>: Supports 5G-AKA and EAP-AKA protocols</li>
+  <li><b>Security Key Generation</b>: Creates encryption and integrity protection keys</li>
+  <li><b>Authentication Vector Management</b>: Retrieves and processes authentication data from UDM</li>
+  <li><b>Re-authentication</b>: Triggers periodic authentication when security context expires</li>
+</ol>
 
-**Role**: Handles all user data packet processing and forwarding
+<h4>Key Interfaces:</h4>
+<ol type="a">
+  <li><b>N12</b>: Communication with AMF for authentication requests</li>
+  <li><b>N13</b>: Communication with UDM for authentication credentials</li>
+</ol>
 
-#### Key Responsibilities:
-* **Packet Operations**:
-  * Routing between RAN and external networks
-  * Forwarding based on SMF rules
-  * Deep packet inspection for policy enforcement
-* **QoS Enforcement**: Applies traffic shaping and prioritization rules
-* **Packet Buffering**: Buffers downlink packets for UEs in idle mode
-* **Traffic Measurement**: Collects traffic statistics for reporting
-* **Lawful Interception**: Supports legal data interception when required
+<img src="images/fig-5.svg" width="40%">
+<p><i>Fig: AUSF Authentication Process and Connections</i></p>
 
-#### Key Interfaces:
-* **N3**: Communication with RAN (GTP-U protocol) for user data
-* **N4**: Communication with SMF (PFCP protocol) for configuration
-* **N6**: Communication with Data Network (Internet/Enterprise networks)
-* **N9**: Communication with other UPFs for distributed deployments
+<h3>3.5 Unified Data Management (UDM)</h3>
+<p><b>Role</b>: Central repository for subscriber data and credentials</p>
 
-<img src="images/fig-4.svg" alt="UPF Data Plane Operations and Connections" width="40%">
+<h4>Key Responsibilities:</h4>
+<ol type="a">
+  <li><b>Subscription Management</b>:
+    <ol type="i">
+      <li>Stores and provides subscriber profile information</li>
+      <li>Maintains authentication keys and vectors</li>
+    </ol>
+  </li>
+  <li><b>UE Registration</b>: Tracks UE registration status across the network</li>
+  <li><b>Access Authorization</b>: Validates UE access rights and restrictions</li>
+  <li><b>Subscription Data Provisioning</b>: Delivers subscription data to requesting network functions</li>
+</ol>
 
-*Fig: UPF Data Plane Operations and Connections*
+<h4>Key Interfaces:</h4>
+<ol type="a">
+  <li><b>N8</b>: Communication with AMF for registration and subscription data</li>
+  <li><b>N10</b>: Communication with SMF for session-related subscription data</li>
+  <li><b>N13</b>: Communication with AUSF for authentication credentials</li>
+  <li><b>N35</b>: Communication with UDR for data storage</li>
+</ol>
 
----
+<img src="images/fig-6.svg" width="40%">
+<p><i>Fig: UDM Data Management and Connections</i></p>
 
-### 3.4 Authentication Server Function (AUSF)
+<h3>3.6 Policy Control Function (PCF)</h3>
+<p><b>Role</b>: Provides unified policy framework for network behavior</p>
 
-**Role**: Performs authentication services for UE network access
+<h4>Key Responsibilities:</h4>
+<ol type="a">
+  <li><b>Policy Management</b>:
+    <ol type="i">
+      <li>Defines and enforces network policies</li>
+      <li>Determines QoS parameters for sessions</li>
+      <li>Applies charging policies for billing</li>
+    </ol>
+  </li>
+  <li><b>Policy Provisioning</b>:
+    <ol type="i">
+      <li>Session-specific rules to SMF</li>
+      <li>Access and mobility policies to AMF</li>
+      <li>Network slice policies</li>
+    </ol>
+  </li>
+</ol>
 
-#### Key Responsibilities:
-* **UE Authentication**: Validates UE credentials during registration
-* **Authentication Method Support**: Supports 5G-AKA and EAP-AKA' protocols
-* **Security Key Generation**: Creates encryption and integrity protection keys
-* **Authentication Vector Management**: Retrieves and processes authentication data from UDM
-* **Re-authentication**: Triggers periodic authentication when security context expires
+<h4>Key Interfaces:</h4>
+<ol type="a">
+  <li><b>N5</b>: Communication with Application Functions for app-specific policies</li>
+  <li><b>N7</b>: Communication with SMF for session policies</li>
+  <li><b>N15</b>: Communication with AMF for access and mobility policies</li>
+  <li><b>N36</b>: Communication with UDM for policy-related subscription data</li>
+</ol>
 
-#### Key Interfaces:
-* **N12**: Communication with AMF for authentication requests
-* **N13**: Communication with UDM for authentication credentials
+<img src="images/fig-7.svg" width="40%">
+<p><i>Fig: PCF Policy Framework and Connections</i></p>
 
-<img src="images/fig-5.svg" alt="AUSF Authentication Process and Connections" width="40%">
+<h3>3.7 Network Repository Function (NRF)</h3>
+<p><b>Role</b>: Service discovery and registration for network functions</p>
 
-*Fig: AUSF Authentication Process and Connections*
-
----
-
-### 3.5 Unified Data Management (UDM)
-
-**Role**: Central repository for subscriber data and credentials
-
-#### Key Responsibilities:
-* **Subscription Management**:
-  * Stores and provides subscriber profile information
-  * Maintains authentication keys and vectors
-* **UE Registration**: Tracks UE registration status across the network
-* **Access Authorization**: Validates UE access rights and restrictions
-* **Subscription Data Provisioning**: Delivers subscription data to requesting network functions
-
-#### Key Interfaces:
-* **N8**: Communication with AMF for registration and subscription data
-* **N10**: Communication with SMF for session-related subscription data
-* **N13**: Communication with AUSF for authentication credentials
-* **N35**: Communication with UDR for data storage
-
-<img src="images/fig-6.svg" alt="UDM Data Management and Connections" width="40%">
-
-*Fig: UDM Data Management and Connections*
-
----
-
-### 3.6 Policy Control Function (PCF)
-
-**Role**: Provides unified policy framework for network behavior
-
-#### Key Responsibilities:
-* **Policy Management**:
-  * Defines and enforces network policies
-  * Determines QoS parameters for sessions
-  * Applies charging policies for billing
-* **Policy Provisioning**:
-  * Session-specific rules to SMF
-  * Access and mobility policies to AMF
-  * Network slice policies
-
-#### Key Interfaces:
-* **N5**: Communication with Application Functions for app-specific policies
-* **N7**: Communication with SMF for session policies
-* **N15**: Communication with AMF for access and mobility policies
-* **N36**: Communication with UDM for policy-related subscription data
-
-<img src="images/fig-7.svg" alt="PCF Policy Framework and Connections" width="40%">
-
-*Fig: PCF Policy Framework and Connections*
-
----
-
-### 3.7 Network Repository Function (NRF)
-
-**Role**: Service discovery and registration for network functions
-
-#### Key Responsibilities:
-* **Network Function Registry**: Maintains registry of available network functions
-* **Service Discovery**: Enables network functions to discover each other
-* **Profile Management**: Stores capability and status information
-* **Selection Support**: Helps select appropriate instances based on criteria
-* **Authorization**: Validates access tokens for service-based communication
+<h4>Key Responsibilities:</h4>
+<ol type="a">
+  <li><b>Network Function Registry</b>: Maintains registry of available network functions</li>
+  <li><b>Service Discovery</b>: Enables network functions to discover each other</li>
+  <li><b>Profile Management</b>: Stores capability and status information</li>
+  <li><b>Selection Support</b>: Helps select appropriate instances based on criteria</li>
+  <li><b>Authorization</b>: Validates access tokens for service-based communication</li>
+</ol>
 
 <img src="images/fig-8.svg" alt="NRF Service Discovery Architecture" width="40%">
 
 *Fig: NRF Service Discovery Architecture*
 
-</details>
-
-<details>
-<summary><strong>4. Network Function Interconnections</strong></summary>
-
-## 4. Network Function Interconnections
+## 4 Network Function Interconnections
 
 All network functions collaborate through standardized interfaces to provide seamless mobile connectivity. The control plane functions (AMF, SMF, AUSF, UDM, PCF, NRF) manage signaling and policies, while the user plane function (UPF) handles actual data traffic. This modular architecture enables flexible deployment, independent scaling, and efficient resource utilization.
 
@@ -249,5 +264,4 @@ All network functions collaborate through standardized interfaces to provide sea
 
 *Fig: Complete 5G Core Network Function Interconnection Map*
 
-</details>
 

@@ -6,7 +6,7 @@
       "nfId": "system",
       "timestamp": 1766134019676,
       "level": "SUCCESS",
-      "message": "5G SBA Dashboard initialized and ready",
+      "message": "Dashboard initialized and ready",
       "details": {
         "version": "1.0.0",
         "httpProtocol": "HTTP/2",

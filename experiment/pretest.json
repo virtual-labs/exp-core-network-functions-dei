@@ -2,7 +2,7 @@
   "version": 2.0,
   "questions": [
     {
-      "question": "What is the main architectural approach used in the 5G Core Network?",
+      "question": "Q1. What is the main architectural approach used in the 5G Core Network?",
       "answers": {
         "a": "Monolithic Architecture",
         "b": "Service-Based Architecture (SBA)",
@@ -19,7 +19,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "In 5G, which separation allows independent scaling of control and data processing?",
+      "question": "Q2. In 5G, which separation allows independent scaling of control and data processing?",
       "answers": {
         "a": "Core and Access Separation",
         "b": "Control and User Plane Separation (CUPS)",
@@ -36,7 +36,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "Which network function acts as the primary control plane gateway for the User Equipment (UE)?",
+      "question": "Q3. Which network function acts as the primary control plane gateway for the User Equipment (UE)?",
       "answers": {
         "a": "SMF",
         "b": "UPF",
@@ -53,7 +53,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "The AMF communicates with the UE over which interface?",
+      "question": "Q4. The AMF communicates with the UE over which interface?",
       "answers": {
         "a": "N1",
         "b": "N2",
@@ -70,7 +70,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "Which function is responsible for establishing and managing PDU sessions?",
+      "question": "Q5. Which function is responsible for establishing and managing PDU sessions?",
       "answers": {
         "a": "UDM",
         "b": "PCF",
@@ -87,7 +87,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "What is the main role of the UPF in the 5G Core Network?",
+      "question": "Q6. What is the main role of the UPF in the 5G Core Network?",
       "answers": {
         "a": "Authentication",
         "b": "Policy Enforcement",
@@ -104,7 +104,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "Which interface connects the SMF to the UPF for session configuration?",
+      "question": "Q7. Which interface connects the SMF to the UPF for session configuration?",
       "answers": {
         "a": "N3",
         "b": "N4",
@@ -118,10 +118,10 @@
         "d": "Incorrect — N9 connects multiple UPFs."
       },
       "correctAnswer": "b",
-      "difficulty": "beginner"
+      "difficulty": "intermediate"
     },
     {
-      "question": "The AUSF works closely with which other function to authenticate users?",
+      "question": "Q8. The AUSF works closely with which other function to authenticate users?",
       "answers": {
         "a": "PCF",
         "b": "UDM",
@@ -135,10 +135,10 @@
         "d": "Incorrect — SMF manages sessions."
       },
       "correctAnswer": "b",
-      "difficulty": "beginner"
+      "difficulty": "intermediate"
     },
     {
-      "question": "What is the main purpose of the UDM?",
+      "question": "Q9. What is the main purpose of the UDM?",
       "answers": {
         "a": "Policy Management",
         "b": "Service Registration",
@@ -155,7 +155,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "Which function defines and enforces network policies such as QoS and charging?",
+      "question": "Q10. Which function defines and enforces network policies such as QoS and charging?",
       "answers": {
         "a": "AMF",
         "b": "SMF",
@@ -169,10 +169,10 @@
         "d": "Incorrect — UDM stores subscriber data."
       },
       "correctAnswer": "c",
-      "difficulty": "beginner"
+      "difficulty": "intermediate"
     },
     {
-      "question": "The NRF is responsible for:",
+      "question": "Q11. The NRF is responsible for:",
       "answers": {
         "a": "Forwarding User Packets",
         "b": "Managing UE Authentication",
@@ -189,7 +189,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "Which interface allows the UPF to communicate with external data networks like the Internet?",
+      "question": "Q12. Which interface allows the UPF to communicate with external data networks like the Internet?",
       "answers": {
         "a": "N4",
         "b": "N6",
@@ -206,7 +206,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "What protocol is typically used on the N3 interface between RAN and UPF?",
+      "question": "Q13. What protocol is typically used on the N3 interface between RAN and UPF?",
       "answers": {
         "a": "PFCP",
         "b": "GTP-U",
@@ -216,14 +216,14 @@
       "explanations": {
         "a": "Incorrect — PFCP is used on N4 between SMF and UPF.",
         "b": "Correct — GTP-U carries user plane data on N3 between gNB and UPF.",
-        "c": "Incorrect — HTTP/2 is used for SBA communication between NFs.",
+        "c": "Incorrect — HTTP/2 is used for SBA communication between control NFs.",
         "d": "Incorrect — NGAP is used on N2 between gNB and AMF."
       },
       "correctAnswer": "b",
       "difficulty": "beginner"
     },
     {
-      "question": "Which of the following is NOT a control plane function?",
+      "question": "Q14. Which of the following is NOT a control plane function?",
       "answers": {
         "a": "AMF",
         "b": "SMF",
@@ -237,10 +237,10 @@
         "d": "Incorrect — AUSF is control plane."
       },
       "correctAnswer": "c",
-      "difficulty": "beginner"
+      "difficulty": "intermediate"
     },
     {
-      "question": "Why is the Service-Based Architecture (SBA) advantageous for 5G Core Networks?",
+      "question": "Q15. What protocol is typically used on the N3 interface between RAN and UPF?",
       "answers": {
         "a": "It uses hardware-specific implementations",
         "b": "It makes the network monolithic",
@@ -254,7 +254,7 @@
         "d": "Incorrect — SBA promotes open API-based NF communication."
       },
       "correctAnswer": "c",
-      "difficulty": "beginner"
+      "difficulty": "intermediate"
     }
   ]
 }

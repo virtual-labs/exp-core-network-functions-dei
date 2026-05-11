@@ -1,1 +1,1 @@
-## Implementation of Core Network (Cn) Function (NFV)
+## Implementation of Core Network (CN) Function (NFV)

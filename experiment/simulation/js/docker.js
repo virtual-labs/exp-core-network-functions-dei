@@ -1,4 +1,4 @@
-/**
+ /**
  * ============================================
  * DOCKER TERMINAL MANAGER
  * ============================================
@@ -66,21 +66,11 @@ class DockerTerminal {
                         Docker Terminal - Main Terminal
                     </div>
                     <div class="docker-terminal-controls">
-                        <button class="docker-terminal-btn minimize" id="docker-terminal-minimize" title="Minimize">−</button>
-                        <button class="docker-terminal-btn maximize" id="docker-terminal-maximize" title="Maximize">□</button>
                         <button class="docker-terminal-btn close" id="docker-terminal-close" title="Close">×</button>
                     </div>
                 </div>
                 <div class="docker-terminal-content" id="docker-terminal-content">
-                    <div class="docker-terminal-header">
-                        Docker Terminal v1.0<br>
-                        Type 'help' for available commands<br><br>
-                    </div>
                     <div class="docker-terminal-output" id="docker-terminal-output"></div>
-                    <div class="docker-terminal-input-line">
-                        <span class="docker-terminal-prompt">docker@main></span>
-                        <input type="text" id="docker-terminal-input" class="docker-terminal-input" autocomplete="off" spellcheck="false">
-                    </div>
                 </div>
                 <div class="docker-terminal-resize-handle" id="docker-terminal-resize-handle"></div>
             </div>
@@ -114,12 +104,14 @@ class DockerTerminal {
      * @param {HTMLElement} terminalModal - Terminal modal element
      */
     setupTerminal(terminalModal) {
-        const input = document.getElementById('docker-terminal-input');
         const output = document.getElementById('docker-terminal-output');
         const closeBtn = document.getElementById('docker-terminal-close');
+        const content = document.getElementById('docker-terminal-content');
         
         let commandHistory = [];
         let historyIndex = -1;
+        let currentInputLine = null;
+        let currentInput = null;
 
         // Close button
         closeBtn.addEventListener('click', () => {
@@ -137,8 +129,45 @@ class DockerTerminal {
             }
         });
 
-        // Input handling
-        input.addEventListener('keydown', async (e) => {
+        // Create input line for realistic terminal
+        let cursorPosition = 0;
+        let currentText = '';
+        
+        const updateInputDisplay = () => {
+            if (!currentInputLine) return;
+            const beforeCursor = currentText.slice(0, cursorPosition);
+            const atCursor = currentText[cursorPosition] || '';
+            const afterCursor = currentText.slice(cursorPosition + 1);
+            
+            currentInputLine.innerHTML = `
+                <span class="docker-terminal-prompt">docker@main></span>
+                <span class="docker-terminal-input-text">${beforeCursor}<span class="docker-terminal-cursor-char">${atCursor || '█'}</span>${afterCursor}</span>
+            `;
+        };
+        
+        const createInputLine = () => {
+            // Remove any existing input line
+            if (currentInputLine) {
+                currentInputLine.remove();
+            }
+
+            const inputLine = document.createElement('div');
+            inputLine.className = 'docker-terminal-input-line';
+            output.appendChild(inputLine);
+            currentInputLine = inputLine;
+            cursorPosition = 0;
+            currentText = '';
+            updateInputDisplay();
+            
+            // Auto-scroll to bottom
+            output.scrollTop = output.scrollHeight;
+            content.scrollTop = content.scrollHeight;
+            
+            return { inputLine };
+        };
+
+        // Handle keyboard input for the terminal
+        const handleKeyInput = async (e) => {
             // Handle Ctrl+C to stop watch mode
             if (e.ctrlKey && e.key === 'c' && this.isWatching) {
                 e.preventDefault();
@@ -146,47 +175,223 @@ class DockerTerminal {
                 this.addTerminalLine(output, '', 'blank');
                 this.addTerminalLine(output, 'Watch mode stopped.', 'info');
                 this.addTerminalLine(output, '', 'blank');
+                createInputLine();
+                return;
+            }
+
+            // Handle Ctrl+C to cancel current input
+            if (e.ctrlKey && e.key === 'c' && !this.isWatching) {
+                e.preventDefault();
+                if (currentInputLine) {
+                    currentInputLine.innerHTML = `
+                        <span class="docker-terminal-prompt">docker@main></span>
+                        <span class="docker-terminal-input-text">${currentText}</span>
+                    `;
+                    currentInputLine.classList.add('docker-terminal-command');
+                    currentInputLine = null;
+                }
+                this.addTerminalLine(output, '^C', 'info');
+                createInputLine();
+                return;
+            }
+
+            // Handle Ctrl+L to clear screen
+            if (e.ctrlKey && e.key === 'l') {
+                e.preventDefault();
+                output.innerHTML = '';
+                createInputLine();
                 return;
             }
 
             if (e.key === 'Enter') {
-                const command = input.value.trim();
+                e.preventDefault();
+                const command = currentText.trim();
+                
+                // Remove cursor and finalize the command line
+                if (currentInputLine) {
+                    currentInputLine.innerHTML = `
+                        <span class="docker-terminal-prompt">docker@main></span>
+                        <span class="docker-terminal-input-text">${currentText}</span>
+                    `;
+                    currentInputLine.classList.add('docker-terminal-command');
+                    currentInputLine = null;
+                }
+
                 if (command) {
                     // Add to history
                     commandHistory.push(command);
                     historyIndex = commandHistory.length;
 
-                    // Display command
-                    this.addTerminalLine(output, `docker@main>${command}`, 'command');
-                    
-                    // Clear input
-                    input.value = '';
-
                     // Process command
                     await this.processCommand(command, output);
                 }
+                
+                // Create new input line
+                createInputLine();
             } else if (e.key === 'ArrowUp') {
                 e.preventDefault();
                 if (historyIndex > 0) {
                     historyIndex--;
-                    input.value = commandHistory[historyIndex];
+                    currentText = commandHistory[historyIndex] || '';
+                    cursorPosition = currentText.length;
+                    updateInputDisplay();
                 }
             } else if (e.key === 'ArrowDown') {
                 e.preventDefault();
                 if (historyIndex < commandHistory.length - 1) {
                     historyIndex++;
-                    input.value = commandHistory[historyIndex];
+                    currentText = commandHistory[historyIndex] || '';
+                    cursorPosition = currentText.length;
+                    updateInputDisplay();
                 } else {
                     historyIndex = commandHistory.length;
-                    input.value = '';
+                    currentText = '';
+                    cursorPosition = 0;
+                    updateInputDisplay();
+                }
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                if (cursorPosition > 0) {
+                    cursorPosition--;
+                    updateInputDisplay();
+                }
+            } else if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                if (cursorPosition < currentText.length) {
+                    cursorPosition++;
+                    updateInputDisplay();
+                }
+            } else if (e.key === 'Backspace') {
+                e.preventDefault();
+                if (cursorPosition > 0) {
+                    currentText = currentText.slice(0, cursorPosition - 1) + currentText.slice(cursorPosition);
+                    cursorPosition--;
+                    updateInputDisplay();
+                }
+            } else if (e.key === 'Delete') {
+                e.preventDefault();
+                if (cursorPosition < currentText.length) {
+                    currentText = currentText.slice(0, cursorPosition) + currentText.slice(cursorPosition + 1);
+                    updateInputDisplay();
+                }
+            } else if (e.key === 'Tab') {
+                e.preventDefault();
+                const partial = currentText.trim().toLowerCase();
+                if (!partial) return;
+
+                // Commands with flags stripped out for word-by-word completion
+                const allCommands = [
+                    'help', 'status', 'check', 'clear', 'cls', 'exit',
+                    'ls',
+                    'vi docker-compose.yml',
+                    'docker ps',
+                    'docker network ls',
+                    'docker network inspect',
+                    'docker version',
+                    'docker compose -f docker-compose.yml up -d',
+                    'docker compose -f docker-compose.yml down',
+                    'docker compose up',
+                    'docker compose down',
+                    'docker start',
+                    'docker stop',
+                    'watch docker compose -f docker-compose.yml ps -a'
+                ];
+
+                const matches = allCommands.filter(cmd => cmd.startsWith(partial));
+
+                if (matches.length === 0) return;
+
+                // Find common prefix across matches, but only up to the next word boundary
+                let commonPrefix = matches[0];
+                for (let i = 1; i < matches.length; i++) {
+                    let j = 0;
+                    while (j < commonPrefix.length && j < matches[i].length && commonPrefix[j] === matches[i][j]) j++;
+                    commonPrefix = commonPrefix.slice(0, j);
+                }
+
+                // Trim common prefix to next word boundary (don't cross into next word)
+                const afterPartial = commonPrefix.slice(partial.length);
+                const nextSpaceIdx = afterPartial.indexOf(' ');
+                const fillTo = nextSpaceIdx === -1
+                    ? commonPrefix                          // no more spaces — fill the whole word
+                    : partial + afterPartial.slice(0, nextSpaceIdx); // stop at next space
+
+                if (fillTo.length > partial.length) {
+                    currentText = fillTo;
+                    cursorPosition = currentText.length;
+                    updateInputDisplay();
+                } else {
+                    // Already at boundary — show all options
+                    if (currentInputLine) {
+                        currentInputLine.innerHTML = `
+                            <span class="docker-terminal-prompt">docker@main></span>
+                            <span class="docker-terminal-input-text">${currentText}</span>
+                        `;
+                        currentInputLine.classList.add('docker-terminal-command');
+                        currentInputLine = null;
+                    }
+                    this.addTerminalLine(output, matches.join('    '), 'info');
+                    createInputLine();
+                    currentText = partial;
+                    cursorPosition = currentText.length;
+                    updateInputDisplay();
+                }
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                cursorPosition = 0;
+                updateInputDisplay();
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                cursorPosition = currentText.length;
+                updateInputDisplay();
+            } else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+                // Regular character input
+                e.preventDefault();
+                currentText = currentText.slice(0, cursorPosition) + e.key + currentText.slice(cursorPosition);
+                cursorPosition++;
+                updateInputDisplay();
+            }
+        };
+
+        // Handle copy/paste keyboard shortcuts
+        const handleCopyPaste = async (e) => {
+            // Handle Ctrl+C for copy
+            if ((e.ctrlKey || e.metaKey) && e.key === 'c') {
+                e.preventDefault();
+                const selectedText = window.getSelection().toString();
+                if (selectedText) {
+                    navigator.clipboard.writeText(selectedText).catch(err => console.error('Copy failed:', err));
+                    return;
                 }
             }
-        });
+
+            // Handle Ctrl+V for paste
+            if ((e.ctrlKey || e.metaKey) && e.key === 'v') {
+                e.preventDefault();
+                navigator.clipboard.readText().then(text => {
+                    currentText = currentText.slice(0, cursorPosition) + text + currentText.slice(cursorPosition);
+                    cursorPosition += text.length;
+                    updateInputDisplay();
+                }).catch(err => console.error('Paste failed:', err));
+                return;
+            }
+        };
+
+        // Attach keyboard listeners to the document when terminal is focused
+        document.addEventListener('keydown', handleKeyInput);
+        document.addEventListener('keydown', handleCopyPaste);
+        
+        // Store references to remove listener later
+        terminalModal._keyHandler = handleKeyInput;
+        terminalModal._copyPasteHandler = handleCopyPaste;
 
         // Initial welcome message
-        this.addTerminalLine(output, 'Welcome to Docker Terminal', 'info');
-        this.addTerminalLine(output, 'Type "help" for available commands.', 'info');
-        this.addTerminalLine(output, '', 'blank');
+        this.addTerminalLine(output, '5G WIRELESS LAB', 'info');
+        this.addTerminalLine(output, 'Type \'help\' for available commands.', 'info');
+       
+        
+        // Create initial input line
+        createInputLine();
     }
 
     /**
@@ -246,6 +451,10 @@ class DockerTerminal {
             await this.dockerStop(serviceName, output);
         } else if (cmd === 'cls' || cmd === 'clear') {
             output.innerHTML = '';
+        } else if (cmd === 'ls' || cmd === 'ls -la' || cmd === 'ls -l') {
+            this.showLS(output);
+        } else if (cmd === 'vi docker-compose.yml' || cmd === 'cat docker-compose.yml' || cmd === 'vim docker-compose.yml') {
+            this.showVI(output);
         } else if (cmd === 'exit') {
             const closeBtn = document.getElementById('docker-terminal-close');
             if (closeBtn) closeBtn.click();
@@ -342,6 +551,12 @@ class DockerTerminal {
             '  docker stop <service-name>',
             '    Stop a specific Network Function',
             '',
+            '  ls',
+            '    List files in current directory',
+            '',
+            '  vi docker-compose.yml',
+            '    View docker-compose.yml in read-only vi viewer',
+            '',
             '  cls / clear',
             '    Clear the terminal screen',
             '',
@@ -355,6 +570,309 @@ class DockerTerminal {
 
         helpText.forEach(line => {
             this.addTerminalLine(output, line, 'info');
+        });
+    }
+
+    /**
+     * Show directory listing (ls)
+     */
+    showLS(output) {
+        const files = [
+            { name: 'docker-compose.yml', type: 'file', size: '4.2K', date: 'Apr 10 09:15' }
+        ];
+
+        files.forEach(f => {
+            const perm = f.type === 'dir' ? 'drwxr-xr-x' : '-rw-r--r--';
+            const color = f.type === 'dir' ? 'success' : 'info';
+            this.addTerminalLine(output,
+                `${f.name}`, color);
+        });
+    }
+
+    /**
+     * Show vi viewer for docker-compose.yml (read-only)
+     */
+    showVI(output) {
+        const content = `version: '3.8'
+services:
+  mysql:
+    container_name: "mysql"
+    image: ghcr.io/openairinterface/mysql:8.0
+    volumes:
+      - ./database/oai_db.sql:/docker-entrypoint-initdb.d/oai_db.sql
+      - ./healthscripts/mysql-healthcheck.sh:/tmp/mysql-healthcheck.sh
+    environment:
+      - TZ=Europe/Paris
+      - MYSQL_DATABASE=oai_db
+      - MYSQL_USER=test
+      - MYSQL_PASSWORD=test
+      - MYSQL_ROOT_PASSWORD=linux
+    healthcheck:
+      test: /bin/bash -c "/tmp/mysql-healthcheck.sh"
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    networks:
+      public_net:
+        ipv4_address: 192.168.70.131
+
+  oai-udr:
+    container_name: "oai-udr"
+    image: ghcr.io/openairinterface/oai-udr:develop
+    expose:
+      - 80/tcp
+      - 8080/tcp
+    volumes:
+      - ./conf/config.yaml:/openair-udr/etc/config.yaml
+    environment:
+      - TZ=Europe/Paris
+    depends_on:
+      - mysql
+      - oai-nrf
+    networks:
+      public_net:
+        ipv4_address: 192.168.70.136
+
+  oai-udm:
+    container_name: "oai-udm"
+    image: ghcr.io/openairinterface/oai-udm:develop
+    expose:
+      - 80/tcp
+      - 8080/tcp
+    volumes:
+      - ./conf/config.yaml:/openair-udm/etc/config.yaml
+    environment:
+      - TZ=Europe/Paris
+    depends_on:
+      - oai-udr
+    networks:
+      public_net:
+        ipv4_address: 192.168.70.137
+
+  oai-ausf:
+    container_name: "oai-ausf"
+    image: ghcr.io/openairinterface/oai-ausf:develop
+    expose:
+      - 80/tcp
+      - 8080/tcp
+    volumes:
+      - ./conf/config.yaml:/openair-ausf/etc/config.yaml
+    environment:
+      - TZ=Europe/Paris
+    depends_on:
+      - oai-udm
+    networks:
+      public_net:
+        ipv4_address: 192.168.70.138
+
+  oai-nrf:
+    container_name: "oai-nrf"
+    image: ghcr.io/openairinterface/oai-nrf:develop
+    expose:
+      - 80/tcp
+      - 8080/tcp
+    volumes:
+      - ./conf/config.yaml:/openair-nrf/etc/config.yaml
+    environment:
+      - TZ=Europe/Paris
+    networks:
+      public_net:
+        ipv4_address: 192.168.70.130
+
+  oai-amf:
+    container_name: "oai-amf"
+    image: ghcr.io/openairinterface/oai-amf:develop
+    expose:
+      - 80/tcp
+      - 8080/tcp
+      - 38412/sctp
+    volumes:
+      - ./conf/config.yaml:/openair-amf/etc/config.yaml
+    environment:
+      - TZ=Europe/Paris
+    depends_on:
+      - mysql
+      - oai-nrf
+      - oai-ausf
+    networks:
+      public_net:
+        ipv4_address: 192.168.70.132
+
+  oai-smf:
+    container_name: "oai-smf"
+    image: ghcr.io/openairinterface/oai-smf:develop
+    expose:
+      - 80/tcp
+      - 8080/tcp
+      - 8805/udp
+    volumes:
+      - ./conf/config.yaml:/openair-smf/etc/config.yaml
+    environment:
+      - TZ=Europe/Paris
+    depends_on:
+      - oai-nrf
+      - oai-amf
+    networks:
+      public_net:
+        ipv4_address: 192.168.70.133
+
+  oai-upf:
+    container_name: "oai-upf"
+    image: ghcr.io/openairinterface/oai-upf:develop
+    expose:
+      - 80/tcp
+      - 2152/udp
+      - 8805/udp
+    volumes:
+      - ./conf/config.yaml:/openair-upf/etc/config.yaml
+    environment:
+      - TZ=Europe/Paris
+    depends_on:
+      - oai-nrf
+      - oai-smf
+    cap_add:
+      - NET_ADMIN
+      - SYS_ADMIN
+    cap_drop:
+      - ALL
+    privileged: true
+    networks:
+      public_net:
+        ipv4_address: 192.168.70.134
+
+networks:
+  public_net:
+    driver: bridge
+    name: oaiworkshop
+    ipam:
+      config:
+        - subnet: 192.168.70.0/24
+    driver_opts:
+      com.docker.network.bridge.name: "oaiworkshop"`;
+
+        // Build vi modal overlay
+        const viModal = document.createElement('div');
+        viModal.id = 'vi-modal';
+        viModal.style.cssText = `
+            position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 99999;
+        `;
+
+        const lines = content.split('\n');
+        const numbered = lines.map((line, i) => {
+            const num = String(i + 1).padStart(3, ' ');
+            const escaped = line
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+
+            let highlighted = escaped;
+            const trimmed = escaped.trimStart();
+            const indent = escaped.length - trimmed.length;
+            const indentHtml = '&nbsp;'.repeat(indent);
+
+            if (trimmed === '') {
+                // blank line
+                highlighted = escaped;
+            } else if (trimmed.startsWith('#')) {
+                // comment
+                highlighted = indentHtml + `<span style="color:#6a9955">${trimmed}</span>`;
+            } else if (/^-\s/.test(trimmed)) {
+                // list item: - value
+                const val = trimmed.slice(2);
+                const coloredVal = val.startsWith('"') || val.startsWith("'")
+                    ? `<span style="color:#9ecbff">${val}</span>`
+                    : /^\d/.test(val)
+                        ? `<span style="color:#f8c555">${val}</span>`
+                        : `<span style="color:#e3e3e3">${val}</span>`;
+                highlighted = indentHtml + `<span style="color:#c9d1d9">- </span>${coloredVal}`;
+            } else if (/^[\w-]+:\s*$/.test(trimmed)) {
+                // key only (no value — block key)
+                const key = trimmed.slice(0, -1);
+                highlighted = indentHtml + `<span style="color:#79b8ff">${key}</span><span style="color:#c9d1d9">:</span>`;
+            } else if (/^[\w-]+:\s+.+/.test(trimmed)) {
+                // key: value
+                const colonIdx = trimmed.indexOf(':');
+                const key = trimmed.slice(0, colonIdx);
+                const rest = trimmed.slice(colonIdx + 1).trimStart();
+                const coloredVal = rest.startsWith('"') || rest.startsWith("'")
+                    ? `<span style="color:#9ecbff">${rest}</span>`
+                    : /^\d/.test(rest)
+                        ? `<span style="color:#f8c555">${rest}</span>`
+                        : rest === 'true' || rest === 'false'
+                            ? `<span style="color:#f97583">${rest}</span>`
+                            : `<span style="color:#e3e3e3">${rest}</span>`;
+                highlighted = indentHtml + `<span style="color:#79b8ff">${key}</span><span style="color:#c9d1d9">: </span>${coloredVal}`;
+            }
+
+            return `<div style="display:flex;min-height:20px"><span style="color:#444;min-width:36px;text-align:right;padding-right:12px;user-select:none;flex-shrink:0">${num}</span><span style="white-space:pre">${highlighted}</span></div>`;
+        }).join('');
+
+        viModal.innerHTML = `
+            <div style="
+                width:820px; max-width:95vw; height:80vh;
+                background:#0d1117; border:1px solid #30363d; border-radius:6px;
+                display:flex; flex-direction:column; font-family:'Consolas','Courier New',monospace; font-size:13px;
+            ">
+                <div style="
+                    background:#161b22; padding:6px 14px;
+                    border-bottom:1px solid #30363d; color:#8b949e;
+                    display:flex; justify-content:space-between; align-items:center;
+                ">
+                    <span><span style="color:#58a6ff">docker-compose.yml</span> &nbsp;[Read Only]</span>
+                    <span style="font-size:11px">Press <kbd style="background:#21262d;padding:1px 5px;border-radius:3px;border:1px solid #444">:q</kbd> or <kbd style="background:#21262d;padding:1px 5px;border-radius:3px;border:1px solid #444">Esc</kbd> to close</span>
+                </div>
+                <div style="flex:1;overflow-y:auto;padding:10px 6px;line-height:1.6;color:#c9d1d9">
+                    ${numbered}
+                </div>
+                <div style="
+                    background:#161b22; padding:4px 14px;
+                    border-top:1px solid #30363d; color:#8b949e; font-size:12px;
+                    display:flex; justify-content:space-between;
+                ">
+                    <span id="vi-cmd-display">&nbsp;</span>
+                    <span>${lines.length} lines &nbsp;|&nbsp; READ-ONLY</span>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(viModal);
+
+        // Handle :q and Esc to close
+        let cmdBuffer = '';
+        const viKeyHandler = (e) => {
+            // Block ALL keystrokes from reaching the terminal while vi is open
+            e.stopPropagation();
+            e.preventDefault();
+
+            if (e.key === 'Escape') {
+                cmdBuffer = '';
+                const disp = document.getElementById('vi-cmd-display');
+                if (disp) disp.textContent = '';
+            } else if (e.key === ':') {
+                cmdBuffer = ':';
+                const disp = document.getElementById('vi-cmd-display');
+                if (disp) disp.textContent = ':';
+            } else if (cmdBuffer === ':' && (e.key === 'q' || e.key === 'Q')) {
+                cmdBuffer = '';
+                document.removeEventListener('keydown', viKeyHandler, true);
+                viModal.remove();
+            } else if (e.key === 'Enter' && cmdBuffer.startsWith(':')) {
+                cmdBuffer = '';
+                document.removeEventListener('keydown', viKeyHandler, true);
+                viModal.remove();
+            }
+        };
+        // Use capture phase so it intercepts before the terminal listener
+        document.addEventListener('keydown', viKeyHandler, true);
+
+        // Click backdrop to close
+        viModal.addEventListener('click', (e) => {
+            if (e.target === viModal) {
+                document.removeEventListener('keydown', viKeyHandler, true);
+                viModal.remove();
+            }
         });
     }
 
@@ -464,7 +982,7 @@ class DockerTerminal {
                 const serviceNameMap = {
                     'AMF': 'oai-amf', 'SMF': 'oai-smf', 'UPF': 'oai-upf', 'AUSF': 'oai-ausf',
                     'UDM': 'oai-udm', 'UDR': 'oai-udr', 'NRF': 'oai-nrf', 'PCF': 'oai-pcf',
-                    'NSSF': 'oai-nssf', 'MySQL': 'mysql', 'ext-dn': 'oai-ext-dn'
+                    'NSSF': 'oai-nssf'
                 };
                 for (const nf of existingNFs) {
                     const serviceName = serviceNameMap[nf.type] || nf.type.toLowerCase();
@@ -505,7 +1023,7 @@ class DockerTerminal {
                 const serviceNameMap = {
                     'AMF': 'oai-amf', 'SMF': 'oai-smf', 'UPF': 'oai-upf', 'AUSF': 'oai-ausf',
                     'UDM': 'oai-udm', 'UDR': 'oai-udr', 'NRF': 'oai-nrf', 'PCF': 'oai-pcf',
-                    'NSSF': 'oai-nssf', 'MySQL': 'mysql', 'ext-dn': 'oai-ext-dn'
+                    'NSSF': 'oai-nssf'
                 };
                 const serviceName = serviceNameMap[nf.type] || nf.type.toLowerCase();
                 const status = nf.status === 'stable' ? '(healthy)' : '(starting)';
@@ -620,15 +1138,19 @@ class DockerTerminal {
             }
 
             // Connect this NF to the Service Bus (so batch-started NFs also show on bus)
+            // Rebuild all bus connections so manually-added NFs stay on the same bus
             if (topologyData && window.dataStore) {
-                this.ensureNFConnectedToBus(nf, topologyData);
+                this.removeAllBusesAndBusConnections();
+                const allCurrentNFs = window.dataStore.getAllNFs() || [];
+                allCurrentNFs.forEach(existingNF => this.ensureNFConnectedToBus(existingNF, topologyData));
+                if (window.canvasRenderer) window.canvasRenderer.render();
             }
             
             // Get service name
             const serviceNameMap = {
                 'AMF': 'oai-amf', 'SMF': 'oai-smf', 'UPF': 'oai-upf', 'AUSF': 'oai-ausf',
                 'UDM': 'oai-udm', 'UDR': 'oai-udr', 'NRF': 'oai-nrf', 'PCF': 'oai-pcf',
-                'NSSF': 'oai-nssf', 'MySQL': 'mysql', 'ext-dn': 'oai-ext-dn'
+                'NSSF': 'oai-nssf'
             };
             const serviceName = serviceNameMap[nf.type] || nf.type.toLowerCase();
             
@@ -649,7 +1171,7 @@ class DockerTerminal {
                 });
             }
 
-            // After 5 seconds, set to stable and (if UPF) auto-connect SMF and ext-dn
+            // After 5 seconds, set to stable
             setTimeout(() => {
                 const updatedNF = window.dataStore?.getNFById(nf.id);
                 if (updatedNF) {
@@ -670,10 +1192,6 @@ class DockerTerminal {
                         });
                     }
                     
-                    if (updatedNF.type === 'UPF') {
-                        window.dockerTerminal.autoConnectUPFToSMFAndExtDn(updatedNF);
-                    }
-                    
                     if (window.canvasRenderer) window.canvasRenderer.render();
                 }
             }, 5000);
@@ -684,9 +1202,7 @@ class DockerTerminal {
         // Show summary
         if (missingConfigs.length > 0) {
             this.addTerminalLine(output, `✅ Started ${missingConfigs.length} new Network Function(s)`, 'success');
-            if (existingNFs.length > 0) {
-                this.addTerminalLine(output, `ℹ️  ${existingNFs.length} Network Function(s) were already running`, 'info');
-            }
+            
         }
 
         // Re-render canvas
@@ -722,8 +1238,6 @@ class DockerTerminal {
             'NRF': 'oai-nrf',
             'PCF': 'oai-pcf',
             'NSSF': 'oai-nssf',
-            'MySQL': 'mysql',
-            'ext-dn': 'ext-dn',
             'gNB': 'oai-gnb',
             'UE': 'oai-ue'
         };
@@ -739,8 +1253,6 @@ class DockerTerminal {
             'NRF': 'ghcr.io/openairinterface/oai-nrf:develop',
             'PCF': 'ghcr.io/openairinterface/oai-pcf:develop',
             'NSSF': 'ghcr.io/openairinterface/oai-nssf:develop',
-            'MySQL': 'ghcr.io/openairinterface/mysql:8.0',
-            'ext-dn': 'ghcr.io/openairinterface/trf-gen-cn5g:latest',
             'gNB': 'ghcr.io/openairinterface/oai-gnb:develop',
             'UE': 'ghcr.io/openairinterface/oai-ue:develop'
         };
@@ -838,8 +1350,6 @@ class DockerTerminal {
             'NRF': 'oai-nrf',
             'PCF': 'oai-pcf',
             'NSSF': 'oai-nssf',
-            'MySQL': 'mysql',
-            'ext-dn': 'ext-dn',
             'gNB': 'oai-gnb',
             'UE': 'oai-ue'
         };
@@ -854,8 +1364,6 @@ class DockerTerminal {
             'NRF': 'oaisoftwarealliance/oai-nrf:2024-june',
             'PCF': 'oaisoftwarealliance/oai-pcf:2024-june',
             'NSSF': 'oaisoftwarealliance/oai-nssf:2024-june',
-            'MySQL': 'mysql:8.0',
-            'ext-dn': 'oaisoftwarealliance/trf-gen-cn5g:latest',
             'gNB': 'oaisoftwarealliance/oai-gnb:2024-june',
             'UE': 'oaisoftwarealliance/oai-ue:2024-june'
         };
@@ -904,7 +1412,7 @@ class DockerTerminal {
             const serviceNameMap = {
                 'AMF': 'oai-amf', 'SMF': 'oai-smf', 'UPF': 'oai-upf', 'AUSF': 'oai-ausf',
                 'UDM': 'oai-udm', 'UDR': 'oai-udr', 'NRF': 'oai-nrf', 'PCF': 'oai-pcf',
-                'NSSF': 'oai-nssf', 'MySQL': 'mysql', 'ext-dn': 'oai-ext-dn'
+                'NSSF': 'oai-nssf'
             };
             const serviceName = serviceNameMap[nfInfo.type] || nfInfo.type.toLowerCase();
             
@@ -920,28 +1428,6 @@ class DockerTerminal {
             } else if (window.dataStore) {
                 // Fallback: use dataStore directly
                 window.dataStore.removeNF(nfInfo.id);
-            }
-        }
-
-        // Also clear buses and bus connections
-        if (window.dataStore) {
-            const allBuses = window.dataStore.getAllBuses() || [];
-            const allBusConnections = window.dataStore.getAllBusConnections() || [];
-            
-            if (allBuses.length > 0 || allBusConnections.length > 0) {
-                // Collect IDs first before deletion
-                const busConnectionIds = allBusConnections.map(bc => bc.id);
-                const busIds = allBuses.map(bus => bus.id);
-                
-                // Remove bus connections
-                busConnectionIds.forEach(busConnId => {
-                    window.dataStore.removeBusConnection(busConnId);
-                });
-                
-                // Remove buses
-                busIds.forEach(busId => {
-                    window.dataStore.removeBus(busId);
-                });
             }
         }
 
@@ -971,14 +1457,14 @@ class DockerTerminal {
         const serviceToNFTypeMap = {
             'oai-nrf': 'NRF', 'oai-amf': 'AMF', 'oai-smf': 'SMF', 'oai-upf': 'UPF',
             'oai-ausf': 'AUSF', 'oai-udm': 'UDM', 'oai-udr': 'UDR', 'oai-pcf': 'PCF',
-            'oai-nssf': 'NSSF', 'mysql': 'MySQL', 'oai-ext-dn': 'ext-dn',
+            'oai-nssf': 'NSSF',
             'oai-gnb': 'gNB', 'oai-ue': 'UE'
         };
 
         const nfType = serviceToNFTypeMap[serviceName.toLowerCase()];
         if (!nfType) {
             this.addTerminalLine(output, `Error: Unknown service '${serviceName}'`, 'error');
-            this.addTerminalLine(output, 'Available: oai-nrf, oai-amf, oai-smf, oai-upf, oai-ausf, oai-udm, oai-udr, oai-pcf, oai-nssf, mysql, oai-ext-dn', 'info');
+            this.addTerminalLine(output, 'Available: oai-nrf, oai-amf, oai-smf, oai-upf, oai-ausf, oai-udm, oai-udr, oai-pcf, oai-nssf', 'info');
             return;
         }
 
@@ -1033,8 +1519,6 @@ class DockerTerminal {
             'oai-nrf': 'NRF',
             'oai-pcf': 'PCF',
             'oai-nssf': 'NSSF',
-            'mysql': 'MySQL',
-            'ext-dn': 'ext-dn',
             'oai-gnb': 'gNB',
             'oai-ue': 'UE'
         };
@@ -1058,16 +1542,13 @@ class DockerTerminal {
         nf.statusTimestamp = Date.now();
         window.dataStore.updateNF(nf.id, nf);
 
-        // After 5 seconds, set to stable and (if UPF) auto-connect SMF and ext-dn
+        // After 5 seconds, set to stable
         setTimeout(() => {
             const updatedNF = window.dataStore?.getNFById(nf.id);
             if (updatedNF) {
                 updatedNF.status = 'stable';
                 updatedNF.statusTimestamp = Date.now();
                 window.dataStore.updateNF(updatedNF.id, updatedNF);
-                if (updatedNF.type === 'UPF') {
-                    window.dockerTerminal.autoConnectUPFToSMFAndExtDn(updatedNF);
-                }
                 if (window.canvasRenderer) window.canvasRenderer.render();
             }
         }, 5000);
@@ -1103,8 +1584,6 @@ class DockerTerminal {
             'oai-nrf': 'NRF',
             'oai-pcf': 'PCF',
             'oai-nssf': 'NSSF',
-            'mysql': 'MySQL',
-            'ext-dn': 'ext-dn',
             'oai-gnb': 'gNB',
             'oai-ue': 'UE'
         };
@@ -1275,7 +1754,7 @@ class DockerTerminal {
                 }
                 
                 // Remove direct connections between NFs that are both on Service Bus
-                // Keep connections like N4 (UPF-SMF), N6 (ext-dn-UPF), MySQL-UDR
+                // Keep connections like N4 (UPF-SMF), MySQL-UDR
                 // These are not Service Bus connections or are different interface types
                 const bothOnServiceBus = serviceBusNFIds.has(conn.sourceId) && 
                                         serviceBusNFIds.has(conn.targetId);
@@ -1338,85 +1817,6 @@ class DockerTerminal {
     }
 
     /**
-     * When UPF becomes stable (after 5s), auto-create SMF and ext-dn if missing and connect:
-     * N4: UPF -> SMF, N6: ext-dn -> UPF
-     * @param {Object} upf - The UPF NF object (must have upf.id)
-     */
-    async autoConnectUPFToSMFAndExtDn(upf) {
-        if (!upf || upf.type !== 'UPF' || !window.dataStore) return;
-
-        let topology = null;
-        try {
-            const response = await fetch('../one-click.json');
-            if (response.ok) topology = this.filterTopology(await response.json());
-        } catch (e) {
-            console.warn('autoConnectUPFToSMFAndExtDn: failed to load topology', e);
-        }
-
-        const defs = this.getDefaultNFConfigurations();
-        const allNFs = window.dataStore.getAllNFs() || [];
-        const hasSMF = allNFs.some(n => n.type === 'SMF');
-        const hasExtDn = allNFs.some(n => n.type === 'ext-dn');
-
-        const addConnection = (sourceId, targetId, interfaceName) => {
-            const exists = (window.dataStore.getAllConnections() || []).some(
-                c => (c.sourceId === sourceId && c.targetId === targetId) || (c.sourceId === targetId && c.targetId === sourceId)
-            );
-            if (exists) return;
-            const conn = {
-                id: `conn-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
-                sourceId, targetId, interfaceName,
-                protocol: 'HTTP/2', status: 'connected', createdAt: Date.now(),
-                isManual: false, showVisual: true
-            };
-            window.dataStore.addConnection(conn);
-        };
-
-        const createNFFromTopology = (type, defaultConfig) => {
-            const topoNF = topology?.nfs?.find(n => n.type === type);
-            const posX = topoNF?.position?.x ?? topoNF?.x ?? 100;
-            const posY = topoNF?.position?.y ?? topoNF?.y ?? 100;
-            const cfg = defaultConfig || defs.find(c => c.type === type);
-            const nf = {
-                id: topoNF?.id || `nf-${type}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-                type, name: topoNF?.name || `${type}-1`,
-                position: { x: posX, y: posY },
-                color: topoNF?.color || '#00bcd4',
-                config: { ipAddress: cfg?.ipAddress || '192.168.1.12', port: cfg?.port || 8080, httpProtocol: 'HTTP/2', capacity: 1000, load: 0 },
-                icon: topoNF?.icon || (type === 'SMF' ? 'images/icons/smf.svg' : null),
-                createdAt: Date.now(), status: 'stable', statusTimestamp: Date.now()
-            };
-            if (type === 'ext-dn') nf.config.port = 80;
-            window.dataStore.addNF(nf);
-            if (nf.icon && type === 'SMF') {
-                const img = new Image();
-                img.src = new URL(nf.icon.startsWith('http') ? nf.icon : nf.icon, window.location.href).href;
-                img.onload = () => { nf.iconImage = img; if (window.canvasRenderer) window.canvasRenderer.render(); };
-                img.onerror = () => { img.src = new URL('images/icons/smf.svg', window.location.href).href; };
-            }
-            if (window.logEngine) window.logEngine.onNFAdded(nf);
-            return nf;
-        };
-
-        let smf = allNFs.find(n => n.type === 'SMF');
-        if (!hasSMF) {
-            const smfCfg = defs.find(c => c.type === 'SMF');
-            smf = createNFFromTopology('SMF', smfCfg);
-        }
-
-        let extDn = allNFs.find(n => n.type === 'ext-dn');
-        if (!hasExtDn) {
-            const extDnCfg = { type: 'ext-dn', ipAddress: '192.168.1.15', port: 80, httpProtocol: 'HTTP/2' };
-            extDn = createNFFromTopology('ext-dn', extDnCfg);
-        }
-
-        addConnection(upf.id, smf.id, 'N4');
-        addConnection(extDn.id, upf.id, 'N6');
-
-        if (window.canvasRenderer) window.canvasRenderer.render();
-    }
-
-    /**
      * Remove all buses and all bus connections from the data store (clears the older bus line).
      */
     removeAllBusesAndBusConnections() {
@@ -1428,8 +1828,21 @@ class DockerTerminal {
     }
 
     /**
+     * Reconnect ALL NFs currently in the data store to the topology bus.
+     * Called after any bus rebuild to ensure manually-added NFs stay on the same bus.
+     * @param {Object} filteredTopology - Filtered topology with buses and busConnections
+     */
+    reconnectAllNFsToBus(filteredTopology) {
+        if (!window.dataStore || !filteredTopology) return;
+        const allNFs = window.dataStore.getAllNFs() || [];
+        allNFs.forEach(nf => this.ensureNFConnectedToBus(nf, filteredTopology));
+        if (window.canvasRenderer) window.canvasRenderer.render();
+    }
+
+    /**
      * Ensure an NF is connected to the Service Bus from topology (so the line shows on canvas).
      * Creates the bus if missing and adds the bus connection for this NF.
+     * Matches NF by id first, then falls back to type match.
      * @param {Object} nf - The NF just added (must have nf.id)
      * @param {Object} filteredTopology - Filtered topology with buses and busConnections
      */
@@ -1438,7 +1851,8 @@ class DockerTerminal {
         const busConnections = filteredTopology.busConnections || [];
         const buses = filteredTopology.buses || [];
         const topologyNFs = filteredTopology.nfs || [];
-        // Match by id (topology-created NF) or by type (fallback-created NF from batch)
+
+        // Match by id (topology-created NF) or by type (manually-created or fallback NF)
         const connsForThisNF = busConnections.filter(bc => {
             if (bc.nfId === nf.id) return true;
             const topoNF = topologyNFs.find(n => n.id === bc.nfId);
@@ -1450,25 +1864,29 @@ class DockerTerminal {
             const bus = buses.find(b => b.id === busConn.busId);
             if (!bus) continue;
 
+            // Ensure the bus exists in the data store
             if (!window.dataStore.getBusById(bus.id)) {
                 window.dataStore.addBus(JSON.parse(JSON.stringify(bus)));
             }
-            const exists = (window.dataStore.getAllBusConnections() || []).some(
-                c => c.nfId === nf.id && c.busId === busConn.busId
+
+            // Remove any existing bus connections for this NF (to avoid duplicates on different buses)
+            const existingConns = (window.dataStore.getAllBusConnections() || []).filter(
+                c => c.nfId === nf.id
             );
-            if (!exists) {
-                const newConn = {
-                    id: busConn.id || `bus-conn-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-                    nfId: nf.id,
-                    busId: busConn.busId,
-                    type: busConn.type || 'bus-connection',
-                    interfaceName: busConn.interfaceName,
-                    protocol: busConn.protocol || 'HTTP/2',
-                    status: busConn.status || 'connected',
-                    createdAt: busConn.createdAt || Date.now()
-                };
-                window.dataStore.addBusConnection(newConn);
-            }
+            existingConns.forEach(c => window.dataStore.removeBusConnection(c.id));
+
+            // Add fresh bus connection
+            const newConn = {
+                id: busConn.id || `bus-conn-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+                nfId: nf.id,
+                busId: busConn.busId,
+                type: busConn.type || 'bus-connection',
+                interfaceName: busConn.interfaceName,
+                protocol: busConn.protocol || 'HTTP/2',
+                status: busConn.status || 'connected',
+                createdAt: busConn.createdAt || Date.now()
+            };
+            window.dataStore.addBusConnection(newConn);
         }
     }
 
@@ -1486,8 +1904,7 @@ class DockerTerminal {
             { type: 'UDM', ipAddress: '192.168.1.60', port: 8080, httpProtocol: 'HTTP/2' },
             { type: 'UDR', ipAddress: '192.168.1.70', port: 8080, httpProtocol: 'HTTP/2' },
             { type: 'PCF', ipAddress: '192.168.1.80', port: 8080, httpProtocol: 'HTTP/2' },
-            { type: 'NSSF', ipAddress: '192.168.1.90', port: 8080, httpProtocol: 'HTTP/2' },
-            { type: 'MySQL', ipAddress: '192.168.1.100', port: 3306, httpProtocol: 'HTTP/2' }
+            { type: 'NSSF', ipAddress: '192.168.1.90', port: 8080, httpProtocol: 'HTTP/2' }
         ];
     }
 
@@ -1510,8 +1927,6 @@ class DockerTerminal {
             'oai-udr': 'UDR',
             'oai-pcf': 'PCF',
             'oai-nssf': 'NSSF',
-            'mysql': 'MySQL',
-            'oai-ext-dn': 'ext-dn',
             'oai-gnb': 'gNB',
             'oai-ue': 'UE'
         };
@@ -1521,7 +1936,7 @@ class DockerTerminal {
         
         if (!nfType) {
             this.addTerminalLine(output, `Error: Unknown service '${serviceName}'`, 'error');
-            this.addTerminalLine(output, 'Available services: oai-nrf, oai-amf, oai-smf, oai-upf, oai-ausf, oai-udm, oai-udr, oai-pcf, oai-nssf, mysql', 'info');
+            this.addTerminalLine(output, 'Available services: oai-nrf, oai-amf, oai-smf, oai-upf, oai-ausf, oai-udm, oai-udr, oai-pcf, oai-nssf', 'info');
             return;
         }
 
@@ -1679,7 +2094,7 @@ class DockerTerminal {
             });
         }
 
-        // After 5 seconds, set to stable and (if UPF) auto-connect SMF and ext-dn
+        // After 5 seconds, set to stable
         setTimeout(() => {
             const updatedNF = window.dataStore?.getNFById(nf.id);
             if (updatedNF) {
@@ -1698,10 +2113,6 @@ class DockerTerminal {
                         uptime: '5 seconds',
                         readyForConnections: true
                     });
-                }
-                
-                if (updatedNF.type === 'UPF') {
-                    window.dockerTerminal.autoConnectUPFToSMFAndExtDn(updatedNF);
                 }
                 
                 if (window.canvasRenderer) window.canvasRenderer.render();
@@ -2089,7 +2500,12 @@ class DockerTerminal {
         } else if (networkName === 'none') {
             this.inspectNoneNetwork(output);
         } else if (networkName === 'oaiworkshop') {
-            if (this.oaiWorkshopNetworkExists) {
+            const hasNFs = window.dataStore && window.dataStore.getAllNFs().length > 0;
+            if (this.oaiWorkshopNetworkExists || hasNFs) {
+                if (!this.oaiWorkshopNetworkExists) {
+                    this.oaiWorkshopNetworkExists = true;
+                    this.oaiWorkshopNetworkId = this.oaiWorkshopNetworkId || this.generateNetworkId();
+                }
                 this.inspectOAIWorkshopNetwork(output);
             } else {
                 this.addTerminalLine(output, `Error: No such network: ${networkName}`, 'error');
@@ -2223,7 +2639,7 @@ class DockerTerminal {
             const serviceNameMap = {
                 'AMF': 'oai-amf', 'SMF': 'oai-smf', 'UPF': 'oai-upf', 'AUSF': 'oai-ausf',
                 'UDM': 'oai-udm', 'UDR': 'oai-udr', 'NRF': 'oai-nrf', 'PCF': 'oai-pcf',
-                'NSSF': 'oai-nssf', 'MySQL': 'mysql', 'ext-dn': 'oai-ext-dn'
+                'NSSF': 'oai-nssf'
             };
             const serviceName = serviceNameMap[nf.type] || nf.type.toLowerCase();
             const containerId = this.generateContainerId() + this.generateContainerId() + this.generateContainerId() + this.generateContainerId() + this.generateContainerId() + 'abcd';
