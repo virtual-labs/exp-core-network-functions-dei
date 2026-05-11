@@ -120,26 +120,6 @@
       }
     },
     {
-      "id": "ext-dn-1766128453002-votm4",
-      "type": "ext-dn",
-      "name": "ext-dn-1",
-      "position": {
-        "x": 539,
-        "y": 342
-      },
-      "color": "#27ae60",
-      "icon": null,
-      "status": "stable",
-      "statusTimestamp": 1766128458017,
-      "config": {
-        "ipAddress": "192.168.1.15",
-        "port": 80,
-        "capacity": 1000,
-        "load": 0,
-        "httpProtocol": "HTTP/2"
-      }
-    },
-    {
       "id": "udm-1766128464413-gtx9n",
       "type": "UDM",
       "name": "UDM-1",
@@ -214,26 +194,6 @@
       "config": {
         "ipAddress": "192.168.1.19",
         "port": 8088,
-        "capacity": 1000,
-        "load": 0,
-        "httpProtocol": "HTTP/2"
-      }
-    },
-    {
-      "id": "mysql-1766128680036-dkm7t",
-      "type": "MySQL",
-      "name": "MySQL-1",
-      "position": {
-        "x": 726,
-        "y": 36
-      },
-      "color": "#d35400",
-      "icon": "simulation/images/icons/mysql.svg",
-      "status": "stable",
-      "statusTimestamp": 1766128685048,
-      "config": {
-        "ipAddress": "192.168.1.20",
-        "port": 3306,
         "capacity": 1000,
         "load": 0,
         "httpProtocol": "HTTP/2"
@@ -316,17 +276,6 @@
       "showVisual": true
     },
     {
-      "id": "conn-1766128461769-ims3q",
-      "sourceId": "ext-dn-1766128453002-votm4",
-      "targetId": "upf-1766128444987-c07tk",
-      "interfaceName": "N6",
-      "protocol": "HTTP/2",
-      "status": "connected",
-      "createdAt": 1766128461769,
-      "isManual": true,
-      "showVisual": true
-    },
-    {
       "id": "conn-1766128474214-tb5jo",
       "sourceId": "udm-1766128464413-gtx9n",
       "targetId": "nrf-1766128434061-h6d5p",
@@ -334,17 +283,6 @@
       "protocol": "HTTP/2",
       "status": "connected",
       "createdAt": 1766128474214,
-      "isManual": true,
-      "showVisual": true
-    },
-    {
-      "id": "conn-1766128688242-beruw",
-      "sourceId": "mysql-1766128680036-dkm7t",
-      "targetId": "udr-1766128679032-4s7yw",
-      "interfaceName": "SQL/REST API",
-      "protocol": "HTTP/2",
-      "status": "connected",
-      "createdAt": 1766128688242,
       "isManual": true,
       "showVisual": true
     },

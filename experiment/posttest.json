@@ -2,7 +2,7 @@
   "version": 2.0,
   "questions": [
     {
-      "question": "In an OAI-based 5G lab, which NF typically receives the UE's initial registration request?",
+      "question": "Q1. In an OAI-based 5G lab, which NF typically receives the UE's initial registration request?",
       "answers": {
         "a": "SMF",
         "b": "UPF",
@@ -19,7 +19,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "Which protocol is used on the N4 interface between SMF and UPF for session/config control?",
+      "question": "Q2. Which protocol is used on the N4 interface between SMF and UPF for session/config control?",
       "answers": {
         "a": "NGAP",
         "b": "PFCP",
@@ -36,7 +36,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "When a PDU session is successfully created, which NF allocates the UE IP address?",
+      "question": "Q3. When a PDU session is successfully created, which NF allocates the UE IP address?",
       "answers": {
         "a": "AMF",
         "b": "SMF",
@@ -53,7 +53,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "Which interface carries user-plane GTP-U packets between RAN and UPF?",
+      "question": "Q4. Which interface carries user-plane GTP-U packets between RAN and UPF?",
       "answers": {
         "a": "N1",
         "b": "N2",
@@ -70,7 +70,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "During the SBA experiment, which panel shows the logs such as 'NF started successfully'?",
+      "question": "Q5. During the SBA experiment, which panel shows the logs such as 'NF started successfully'?",
       "answers": {
         "a": "NF List Panel",
         "b": "Configuration Panel",
@@ -87,7 +87,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "Which NF is responsible for policy decisions (QoS, charging) provided to the SMF?",
+      "question": "Q6. Which NF is responsible for policy decisions (QoS, charging) provided to the SMF?",
       "answers": {
         "a": "UDM",
         "b": "PCF",
@@ -104,7 +104,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "When starting an NF in the SBA simulator, approximately how long should you wait for it to stabilize?",
+      "question": "Q7. When starting an NF in the SBA simulator, approximately how long should you wait for it to stabilize?",
       "answers": {
         "a": "1 second",
         "b": "5 seconds",
@@ -118,10 +118,10 @@
         "d": "Incorrect — No NF in SBA requires 1 minute to stabilize."
       },
       "correctAnswer": "b",
-      "difficulty": "beginner"
+      "difficulty": "intermediate"
     },
     {
-      "question": "Which log entry indicates that an NF is fully ready after startup?",
+      "question": "Q8. Which log entry indicates that an NF is fully ready after startup?",
       "answers": {
         "a": "NRF discovery failed",
         "b": "Initialization pending",
@@ -135,10 +135,10 @@
         "d": "Incorrect — This indicates an error."
       },
       "correctAnswer": "c",
-      "difficulty": "beginner"
+      "difficulty": "intermediate"
     },
     {
-      "question": "Which interface is used by AMF to communicate NAS messages to the UE?",
+      "question": "Q9. Which interface is used by AMF to communicate NAS messages to the UE?",
       "answers": {
         "a": "N1",
         "b": "N2",
@@ -155,7 +155,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "During PDU session setup, the SMF instructs the UPF to create forwarding rules using:",
+      "question": "Q10. During PDU session setup, the SMF instructs the UPF to create forwarding rules using:",
       "answers": {
         "a": "NGAP messages",
         "b": "PFCP Session Establishment Request",
@@ -172,7 +172,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "Which function maintains subscriber profile and subscription data used during session setup?",
+      "question": "Q11. Which function maintains subscriber profile and subscription data used during session setup?",
       "answers": {
         "a": "NRF",
         "b": "UDM",
@@ -189,7 +189,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "Lawful interception and deep packet inspection are performed in which NF?",
+      "question": "Q12. Lawful interception and deep packet inspection are performed in which NF?",
       "answers": {
         "a": "AMF",
         "b": "PCF",
@@ -203,10 +203,10 @@
         "d": "Incorrect — SMF creates traffic rules but UPF enforces them."
       },
       "correctAnswer": "c",
-      "difficulty": "beginner"
+      "difficulty": "intermediate"
     },
     {
-      "question": "The NRF’s main purpose in SBA is to:",
+      "question": "Q13. The NRF’s main purpose in SBA is to:",
       "answers": {
         "a": "Forward user traffic",
         "b": "Allocate IP addresses",
@@ -223,7 +223,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "In the SBA simulator, which command is used inside the NF terminal to test connectivity?",
+      "question": "Q14. In the SBA simulator, which command is used inside the NF terminal to test connectivity?",
       "answers": {
         "a": "trace",
         "b": "status",
@@ -237,10 +237,10 @@
         "d": "Incorrect — scan is not used for NF communication testing."
       },
       "correctAnswer": "c",
-      "difficulty": "beginner"
+      "difficulty": "intermediate"
     },
     {
-      "question": "What does 'Packet Loss: 0%' indicate during the ping test between NFs?",
+      "question": "Q15. What does 'Packet Loss: 0%' indicate during the ping test between NFs?",
       "answers": {
         "a": "One NF is malfunctioning",
         "b": "Both NFs are unreachable",

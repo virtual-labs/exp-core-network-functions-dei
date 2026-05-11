@@ -26,8 +26,7 @@ class NFManager {
             'NSSF': 0,
             'UDR': 0,
             'gNB': 0,
-            'UE': 0,
-            'MySQL': 0
+            'UE': 0
         };
 
         console.log('✅ NFManager initialized');
@@ -420,8 +419,7 @@ class NFManager {
             'NSSF': { color: '#ffc107', icon: null, name: 'Network Slice Selection' },
             'UDR': { color: '#009688', icon: null, name: 'Unified Data Repository' },
             'gNB': { color: '#8e44ad', icon: null, name: 'gNodeB (5G Base Station)' },
-            'UE': { color: '#16a085', icon: null, name: 'User Equipment' },
-            'MySQL': { color: '#d35400', icon: null, name: 'MySQL Database' }
+            'UE': { color: '#16a085', icon: null, name: 'User Equipment' }
         };
 
         return defaultDefs[type] || { color: '#95a5a6', icon: null, name: type };
@@ -756,8 +754,7 @@ class NFManager {
             'NSSF': ['NRF'],
             'UDR': ['NRF'],
             'gNB': ['AMF', 'UPF'],
-            'UE': ['gNB'],
-            'MySQL': ['UDM']
+            'UE': ['gNB']
         };
     }
 

@@ -710,95 +710,173 @@ button:disabled {
 .form-group:has(#config-http-protocol) label {
     color: #3498db;
     font-weight: 600;
-}/* ====
-========================================
+}
+
+/* ============================================
    Help Modal Styling
    ============================================ */
 .help-modal-content {
-    max-width: 900px;
-    max-height: 80vh;
-    overflow-y: auto;
+    max-width: 700px;
+    width: 95%;
+    padding: 0;
+    background: #1b3a5c;
+    border-radius: 10px;
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.7);
+}
+
+.help-modal-content h2 {
+    font-size: 17px;
+    font-weight: 700;
+    color: #ecf0f1;
+    margin: 0;
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    text-align: center;
+    background: #1b3a5c;
+    flex-shrink: 0;
 }
 
 .help-content {
-    margin: 20px 0;
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 24px 4px;
+    background: #1b3a5c;
 }
 
-.help-section {
-    margin-bottom: 25px;
-    padding: 15px;
-    background: var(--bg-tertiary);
-    border-radius: 8px;
-    border-left: 4px solid var(--accent-blue);
+.help-content::-webkit-scrollbar {
+    width: 7px;
 }
 
-.help-section h3 {
-    margin-bottom: 15px;
-    color: var(--accent-blue);
-    font-size: 16px;
+.help-content::-webkit-scrollbar-track {
+    background: #152d47;
 }
 
-.architecture-diagram {
-    text-align: center;
-    margin: 15px 0;
-    padding: 15px;
-    background: #1a252f;
-    border-radius: 8px;
+.help-content::-webkit-scrollbar-thumb {
+    background: #2e6da4;
+    border-radius: 4px;
 }
 
 .help-steps {
     list-style: none;
-    counter-reset: step-counter;
-    padding-left: 0;
+    padding: 0;
+    margin: 0;
+    counter-reset: help-counter;
 }
 
 .help-steps li {
-    counter-increment: step-counter;
-    margin-bottom: 12px;
-    padding-left: 40px;
-    position: relative;
-    line-height: 1.5;
+    counter-increment: help-counter;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 11px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    color: #d6e8f7;
+    font-size: 13.5px;
+    line-height: 1.55;
+}
+
+.help-steps li:last-child {
+    border-bottom: none;
 }
 
 .help-steps li::before {
-    content: counter(step-counter);
-    position: absolute;
-    left: 0;
-    top: 0;
-    background: var(--accent-blue);
-    color: white;
-    width: 25px;
-    height: 25px;
+    content: counter(help-counter);
+    min-width: 30px;
+    height: 30px;
+    background: #1a8fd1;
+    color: #fff;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bold;
     font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+    box-shadow: 0 2px 6px rgba(26,143,209,0.4);
 }
 
-.help-list {
-    list-style: none;
-    padding-left: 0;
+.help-steps li span {
+    flex: 1;
 }
 
-.help-list li {
-    margin-bottom: 10px;
-    padding: 8px 12px;
-    background: var(--bg-primary);
-    border-radius: 5px;
-    border-left: 3px solid var(--accent-green);
+.help-steps li strong {
+    color: #ffffff;
+    font-weight: 700;
 }
 
-.connection-type {
-    font-weight: bold;
-    padding: 2px 6px;
-    border-radius: 3px;
-    margin-right: 8px;
+.help-steps li code {
+    background: rgba(26, 143, 209, 0.18);
+    color: #7ecfff;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 12px;
+    white-space: nowrap;
 }
 
-.connection-type.nf-bus {
-    background: rgba(46, 204, 113, 0.2);
+.help-steps li em {
+    color: #a8d8ea;
+    font-style: italic;
+}
+
+.help-footer {
+    padding: 14px 24px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: #162f4a;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    flex-shrink: 0;
+}
+
+.btn-view-procedures {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: #1a8fd1;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 13px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    border: none;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.btn-view-procedures:hover {
+    background: #1e9fe8;
+    color: #fff;
+    text-decoration: none;
+}
+
+.btn-help-close {
+    display: block;
+    width: 100%;
+    background: #1a8fd1;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 13px 20px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    box-sizing: border-box;
+}
+
+.btn-help-close:hover {
+    background: #1e9fe8;
+}
     color: #2ecc71;
 }
 
@@ -1336,7 +1414,7 @@ button:disabled {
 .windows-terminal-content {
     flex: 1;
     background: #000000;
-    color: #00ff00;
+    color: #f4f7f2;
     padding: 10px;
     overflow-y: auto;
     font-size: 14px;
@@ -1355,6 +1433,10 @@ button:disabled {
     flex: 1;
     overflow-y: auto;
     margin-bottom: 10px;
+    user-select: text;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
 }
 
 .terminal-line {
@@ -1373,7 +1455,7 @@ button:disabled {
 }
 
 .terminal-success {
-    color: #00ff00;
+    color: #15d815;
 }
 
 .terminal-error {
@@ -1388,7 +1470,6 @@ button:disabled {
     display: flex;
     align-items: center;
     background: #000000;
-    border-top: 1px solid #333333;
     padding-top: 5px;
 }
 
@@ -1436,7 +1517,7 @@ button:disabled {
 /* Terminal button styling */
 .btn-terminal {
     background: linear-gradient(135deg, #000000, #2a2a2a);
-    color: #00ff00;
+    color: #f8fcf8;
     border: 2px solid #404040;
     font-family: 'Consolas', 'Courier New', monospace;
     font-weight: bold;
@@ -1514,14 +1595,14 @@ button:disabled {
 
 .docker-terminal-window {
     width: 900px;
-    height: 700px;
-    background: #0d1117;
-    border: 2px solid #30363d;
-    border-radius: 8px 8px 0 0;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+    height: 600px;
+    background: #0c0c0c;
+    border: 1px solid #333333;
+    border-radius: 4px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
     display: flex;
     flex-direction: column;
-    font-family: 'Consolas', 'Courier New', monospace;
+    font-family: 'Consolas', 'Courier New', 'Lucida Console', monospace;
     transform: scale(0.9);
     transition: transform 0.3s ease;
     position: absolute;
@@ -1541,14 +1622,14 @@ button:disabled {
 }
 
 .docker-terminal-titlebar {
-    background: linear-gradient(to bottom, #161b22, #0d1117);
-    height: 35px;
+    background: #1f1f1f;
+    height: 32px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 12px;
-    border-radius: 6px 6px 0 0;
-    border-bottom: 1px solid #30363d;
+    padding: 0 10px;
+    border-radius: 3px 3px 0 0;
+    border-bottom: 1px solid #333333;
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -1556,9 +1637,9 @@ button:disabled {
 }
 
 .docker-terminal-title {
-    color: #c9d1d9;
-    font-size: 13px;
-    font-weight: 500;
+    color: #cccccc;
+    font-size: 12px;
+    font-weight: 400;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -1574,56 +1655,60 @@ button:disabled {
 }
 
 .docker-terminal-btn {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     border: none;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: bold;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.2s ease;
-    border-radius: 3px;
+    transition: all 0.2s ease;
+    border-radius: 2px;
 }
 
 .docker-terminal-btn.minimize {
-    background: #30363d;
-    color: #c9d1d9;
+    background: transparent;
+    color: #888888;
 }
 
 .docker-terminal-btn.minimize:hover {
-    background: #484f58;
+    background: #333333;
+    color: #cccccc;
 }
 
 .docker-terminal-btn.maximize {
-    background: #30363d;
-    color: #c9d1d9;
+    background: transparent;
+    color: #888888;
 }
 
 .docker-terminal-btn.maximize:hover {
-    background: #484f58;
+    background: #333333;
+    color: #cccccc;
 }
 
 .docker-terminal-btn.close {
-    background: #da3633;
-    color: #ffffff;
+    background: transparent;
+    color: #888888;
 }
 
 .docker-terminal-btn.close:hover {
-    background: #f85149;
+    background: #c75450;
+    color: #ffffff;
 }
 
 .docker-terminal-content {
     flex: 1;
-    background: #0d1117;
-    color: #c9d1d9;
-    padding: 12px;
+    background: #0c0c0c;
+    color: #cccccc;
+    padding: 8px 12px;
     overflow-y: auto;
     font-size: 13px;
     line-height: 1.4;
     display: flex;
     flex-direction: column;
+    font-family: 'Consolas', 'Courier New', 'Lucida Console', monospace;
 }
 
 .docker-terminal-header {
@@ -1635,56 +1720,87 @@ button:disabled {
 .docker-terminal-output {
     flex: 1;
     overflow-y: auto;
-    margin-bottom: 12px;
+    padding-bottom: 4px;
+    user-select: text;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
 }
 
 .docker-terminal-line {
-    margin: 2px 0;
+    margin: 1px 0;
     white-space: pre-wrap;
     word-wrap: break-word;
     font-size: 13px;
+    line-height: 1.4;
 }
 
 .docker-terminal-command {
-    color: #58a6ff;
-    font-weight: 500;
+    color: #cccccc;
 }
 
 .docker-terminal-info {
-    color: #c9d1d9;
+    color: #cccccc;
 }
 
 .docker-terminal-success {
-    color: #3fb950;
+    color: #0dbc79;
 }
 
 .docker-terminal-warning {
-    color: #d29922;
+    color: #e5e510;
 }
 
 .docker-terminal-error {
-    color: #f85149;
+    color: #f14c4c;
 }
 
 .docker-terminal-blank {
-    height: 14px;
+    height: 13px;
 }
 
 .docker-terminal-input-line {
     display: flex;
     align-items: center;
-    background: #0d1117;
-    border-top: 1px solid #30363d;
-    padding-top: 8px;
+    background: transparent;
+    padding: 2px 0;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.4;
 }
 
 .docker-terminal-prompt {
-    color: #58a6ff;
+    color: #f3f7f5;
     margin-right: 8px;
     font-weight: 600;
     white-space: nowrap;
+    flex-shrink: 0;
 }
 
+.docker-terminal-input-text {
+    color: #c9d1d9;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+.docker-terminal-cursor {
+    color: #0dbc79;
+    animation: terminalCursorBlink 1s step-end infinite;
+    font-weight: normal;
+}
+
+.docker-terminal-cursor-char {
+    background-color: #0dbc79;
+    color: #0c0c0c;
+    animation: terminalCursorBlink 1s step-end infinite;
+}
+
+@keyframes terminalCursorBlink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+/* Legacy input style - keep for compatibility */
 .docker-terminal-input {
     flex: 1;
     background: transparent;

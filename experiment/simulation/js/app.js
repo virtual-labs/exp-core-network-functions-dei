@@ -92,7 +92,7 @@ async function initializeApp() {
         // ==========================================
         console.log('\n📋 Step 6: Adding startup log...');
         window.logEngine.addLog('system', 'SUCCESS',
-            '5G SBA Dashboard initialized and ready', {
+            'Dashboard initialized and ready', {
             version: '1.0.0',
             httpProtocol: window.globalHTTPProtocol,
             timestamp: new Date().toISOString(),

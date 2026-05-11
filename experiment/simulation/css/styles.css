@@ -1354,7 +1354,7 @@ button:disabled {
 .terminal-output {
     flex: 1;
     overflow-y: auto;
-    margin-bottom: 10px;
+    padding-bottom: 4px;
 }
 
 .terminal-line {
@@ -1387,9 +1387,11 @@ button:disabled {
 .terminal-input-line {
     display: flex;
     align-items: center;
-    background: #000000;
-    border-top: 1px solid #333333;
-    padding-top: 5px;
+    background: transparent;
+    padding: 1px 0;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.2;
 }
 
 .terminal-prompt {
@@ -1397,8 +1399,27 @@ button:disabled {
     margin-right: 5px;
     font-weight: bold;
     white-space: nowrap;
+    flex-shrink: 0;
 }
 
+.terminal-input-text {
+    color: #ffffff;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+.terminal-cursor-char {
+    background-color: #ffffff;
+    color: #000000;
+    animation: terminalCursorBlink 1s step-end infinite;
+}
+
+@keyframes terminalCursorBlink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+/* Legacy input style - keep for compatibility */
 .terminal-input {
     flex: 1;
     background: transparent;

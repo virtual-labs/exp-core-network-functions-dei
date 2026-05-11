@@ -15,7 +15,7 @@
         <!-- Top Toolbar -->
         <div class="toolbar">
             <div class="toolbar-left">
-                <h1>🌐 Core Network Dashboard</h1>
+                <h1>🌐 Core Network Functions</h1>
             </div>
             <div class="toolbar-right">
                 <!-- Main action buttons -->
@@ -120,40 +120,29 @@
         <div class="modal-content help-modal-content">
             <h2>📚 5G Service-Based Architecture Guide</h2>
             <div class="help-content">
-                <div class="help-section">
-                    <h3>🏗️ Reference Architecture</h3>
-                    <div class="architecture-diagram">
-                        <img id="sba-diagram" src="images/sba/sba.jpg" alt="5G Service-Based Architecture"
-                            style="width: 100%; max-width: 800px; height: auto; background: #1a252f; border-radius: 8px;">
-                    </div>
-                </div>
-
-                <div class="help-section">
-                    <h3>🚀 Quick Start Guide</h3>
-                    <ol class="help-steps">
-                        <li><strong>Create Service Buses:</strong> Click "📊 Add Bus Line" to create Control Plane and
-                            User Plane buses</li>
-                        <li><strong>Add Network Functions:</strong> Click "➕ Add NF" to add AMF, SMF, UPF, etc.</li>
-                        <li><strong>Connect Components:</strong> Use "Select Source" → "Select Destination" to connect
-                            NFs to buses</li>
-                        <li><strong>Validate Topology:</strong> Click "✓ Validate" to check your 5G network design</li>
-                    </ol>
-                </div>
-
-                <div class="help-section">
-                    <h3>🔗 Connection Types</h3>
-                    <ul class="help-list">
-                        <li><span class="connection-type nf-bus">NF → Bus:</span> Connect Network Functions to Service
-                            Buses</li>
-                        <li><span class="connection-type bus-nf">Bus → NF:</span> Connect Service Buses to Network
-                            Functions</li>
-                        <li><span class="connection-type bus-bus">Bus → Bus:</span> Create bridges between different
-                            service buses</li>
-                        <li><span class="connection-type nf-nf">NF → NF:</span> Direct point-to-point connections</li>
-                    </ul>
-                </div>
+                <ol class="help-steps">
+                    <li><span>Open the SBA Dashboard and verify all panels are loaded properly.</span></li>
+                    <li><span>Open the <strong>Terminal</strong> from the toolbar.</span></li>
+                    <li><span>Run <code>docker compose -f docker-compose.yml up -d</code> to start all Network Functions at once.</span></li>
+                    <li><span>Or run <code>docker compose -f docker-compose.yml up -d &lt;service-name&gt;</code> to start a specific NF (e.g., <code>oai-nrf</code>).</span></li>
+                    <li><span>Alternatively, select an NF from the left palette to configure and start it manually.</span></li>
+                    <li><span>Enter a valid IP address, port number, and HTTP protocol, then click <strong>Start NF</strong>.</span></li>
+                    <li><span>Wait 4–5 seconds for the NF to stabilize and register with the NRF.</span></li>
+                    <li><span>Check the Logs Section for <em>"NF started successfully"</em> and <em>"Service registration complete"</em>.</span></li>
+                    <li><span>Repeat steps 5–8 for all remaining NFs (AMF, SMF, UPF, UDM, AUSF, PCF, etc.).</span></li>
+                    <li><span>Check running networks using <code>docker network ls</code>.</span></li>
+                    <li><span>Verify NF IPs using <code>docker network inspect oaiworkshop</code>.</span></li>
+                    <li><span>Click an NF, open its <strong>Command Prompt</strong>, and run <code>ping &lt;target_IP&gt;</code> to validate NF-to-NF connectivity.</span></li>
+                    <li><span>Check ping output — zero packet loss confirms the components can reach each other.</span></li>
+                    <li><span>Stop all services using <code>docker compose -f docker-compose.yml down</code>.</span></li>
+                </ol>
             </div>
-            <button id="help-close" class="btn btn-primary btn-block">Close</button>
+            <div class="help-footer">
+                <a href="../procedure.html" target="_blank" class="btn-view-procedures">
+                    For More Details... 📄 View Full Procedures
+                </a>
+                <button id="help-close" class="btn-help-close">Close</button>
+            </div>
         </div>
     </div>
 

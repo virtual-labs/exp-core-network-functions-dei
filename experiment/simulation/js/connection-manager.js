@@ -43,7 +43,7 @@ class ConnectionManager {
             'AUSF': ['NRF', 'AMF', 'UDM'],
 
             // UDM connections
-            'UDM': ['NRF', 'AMF', 'SMF', 'AUSF', 'PCF', 'MySQL'],
+            'UDM': ['NRF', 'AMF', 'SMF', 'AUSF', 'PCF'],
 
             // PCF connections
             'PCF': ['NRF', 'AMF', 'SMF', 'UDM'],
@@ -56,8 +56,7 @@ class ConnectionManager {
 
             // NEW CONNECTIONS
             'gNB': ['AMF', 'UPF', 'UE'],
-            'UE': ['gNB', 'AMF'],
-            'MySQL': ['UDM']
+            'UE': ['gNB', 'AMF']
         };
     }
 
@@ -244,9 +243,7 @@ class ConnectionManager {
             'gNB-UPF': 'N3',
             'gNB-UE': 'Radio',
             'UE-gNB': 'Radio',
-            'UE-AMF': 'N1',  // UE to AMF (reverse direction)
-            'UDM-MySQL': 'SQL/REST API',
-            'MySQL-UDM': 'SQL/REST API'
+            'UE-AMF': 'N1'  // UE to AMF (reverse direction)
         };
 
         // Try forward direction
@@ -378,6 +375,50 @@ class ConnectionManager {
     createAutoConnection(sourceId, targetId) {
         console.log('🤖 Creating AUTO connection (logical only, no visual line):', sourceId, '→', targetId);
         return this.createConnection(sourceId, targetId, false); // isManual = false
+    }
+
+    /**
+     * Force-create a mandatory connection, bypassing subnet/validity/duplicate guards.
+     * Used for required architectural links (e.g. UDR ↔ MySQL) that must always exist.
+     * @param {string} sourceId - Source NF ID
+     * @param {string} targetId - Target NF ID
+     * @param {string} interfaceName - Interface label
+     * @returns {Object|null} Created connection or null if already exists / NFs missing
+     */
+    forceMandatoryConnection(sourceId, targetId, interfaceName) {
+        const sourceNF = window.dataStore?.getNFById(sourceId);
+        const targetNF = window.dataStore?.getNFById(targetId);
+        if (!sourceNF || !targetNF) return null;
+
+        // Skip if already connected in either direction
+        if (window.dataStore.connectionExists(sourceId, targetId)) {
+            console.log(`ℹ️ Mandatory connection already exists: ${sourceNF.name} ↔ ${targetNF.name}`);
+            return null;
+        }
+
+        const connection = {
+            id: this.generateConnectionId(),
+            sourceId,
+            targetId,
+            interfaceName: interfaceName || this.getInterfaceName(sourceNF.type, targetNF.type),
+            protocol: window.globalHTTPProtocol || 'HTTP/2',
+            status: 'connected',
+            createdAt: Date.now(),
+            isManual: false,
+            showVisual: false
+        };
+
+        window.dataStore.addConnection(connection);
+
+        if (window.logEngine) {
+            window.logEngine.onConnectionCreated(connection);
+        }
+        if (window.canvasRenderer) {
+            window.canvasRenderer.render();
+        }
+
+        console.log(`✅ Mandatory connection created: ${sourceNF.name} ↔ ${targetNF.name} [${connection.interfaceName}]`);
+        return connection;
     }
 
     /**

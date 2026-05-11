@@ -657,6 +657,8 @@ class UIController {
 
         console.log('✅ Topology cleared');
         alert('Topology cleared successfully!');
+        // Full refresh ensures complete re-initialization of all managers and UI state
+        window.location.reload();
     }
 
     /**
@@ -735,23 +737,16 @@ class UIController {
      */
     showHelpModal() {
         const modal = document.getElementById('help-modal');
-        if (modal) {
-            modal.style.display = 'flex';
-        }
+        if (!modal) return;
+        modal.style.display = 'flex';
 
-        // Setup close button
         const closeBtn = document.getElementById('help-close');
         if (closeBtn) {
-            closeBtn.onclick = () => {
-                modal.style.display = 'none';
-            };
+            closeBtn.onclick = () => { modal.style.display = 'none'; };
         }
 
-        // Close on background click
         modal.onclick = (e) => {
-            if (e.target === modal) {
-                modal.style.display = 'none';
-            }
+            if (e.target === modal) modal.style.display = 'none';
         };
     }
 
@@ -892,14 +887,11 @@ class UIController {
             <button class="btn btn-primary btn-block" id="btn-save-config">Save Changes</button>
             <button class="btn btn-danger btn-block" id="btn-delete-nf">Delete NF</button>
             
-            <div class="troubleshoot-section">
-                <h4>🔧 Troubleshoot</h4>
-                <p class="config-hint">Open Windows-style terminal for network diagnostics</p>
-                
-                <button class="btn btn-terminal btn-block" id="btn-open-terminal">
-                    💻 Open Command Prompt
-                </button>
-            </div>
+            
+            <button class="btn btn-terminal btn-block" id="btn-open-terminal">
+                💻 Open Command Prompt
+            </button>
+            
         `;
 
         // Protocol change event listener
@@ -1065,45 +1057,59 @@ class UIController {
     }
 
     /**
-     * Auto-connect NF to bus line if applicable
+     * Auto-connect NF to bus line if applicable.
+     * Always uses the topology bus so manual and terminal NFs share one bus line.
      * @param {Object} nf - Network Function
      */
-    autoConnectToBusIfApplicable(nf) {
+    async autoConnectToBusIfApplicable(nf) {
         // Don't auto-connect UPF, gNB, and UE as per requirement
         const excludedTypes = ['UPF', 'gNB', 'UE'];
-
         if (excludedTypes.includes(nf.type)) {
             console.log(`🚫 Skipping auto-connect for ${nf.type} (excluded type)`);
             return;
         }
 
-        // Find available bus lines
-        const allBuses = window.dataStore?.getAllBuses() || [];
+        // Try to load topology to get the canonical bus
+        let filteredTopology = null;
+        try {
+            const response = await fetch('../one-click.json');
+            if (response.ok) {
+                const topology = await response.json();
+                if (window.dockerTerminal) {
+                    filteredTopology = window.dockerTerminal.filterTopology(topology);
+                }
+            }
+        } catch (e) {
+            console.warn('autoConnectToBusIfApplicable: could not load topology', e);
+        }
 
+        if (filteredTopology && window.dockerTerminal) {
+            // Rebuild buses from topology so all NFs share the same bus
+            window.dockerTerminal.removeAllBusesAndBusConnections();
+            const allNFs = window.dataStore?.getAllNFs() || [];
+            allNFs.forEach(existingNF => window.dockerTerminal.ensureNFConnectedToBus(existingNF, filteredTopology));
+            if (window.canvasRenderer) window.canvasRenderer.render();
+            return;
+        }
+
+        // Fallback: connect to the first available bus
+        const allBuses = window.dataStore?.getAllBuses() || [];
         if (allBuses.length === 0) {
             console.log('ℹ️ No bus lines available for auto-connect');
             return;
         }
 
-        // Connect to the first available bus (or you can add logic to choose the best bus)
         const targetBus = allBuses[0];
-
         if (window.busManager) {
             console.log(`🔗 Auto-connecting ${nf.name} to ${targetBus.name}`);
             const connection = window.busManager.connectNFToBus(nf.id, targetBus.id);
-
-            if (connection) {
-                console.log(`✅ Auto-connected ${nf.name} to ${targetBus.name}`);
-
-                // Add log for auto-connection
-                if (window.logEngine) {
-                    window.logEngine.addLog(nf.id, 'INFO',
-                        `Auto-connected to ${targetBus.name} service bus`, {
-                        busId: targetBus.id,
-                        interfaceName: connection.interfaceName,
-                        autoConnect: true
-                    });
-                }
+            if (connection && window.logEngine) {
+                window.logEngine.addLog(nf.id, 'INFO',
+                    `Auto-connected to ${targetBus.name} service bus`, {
+                    busId: targetBus.id,
+                    interfaceName: connection.interfaceName,
+                    autoConnect: true
+                });
             }
         }
     }
@@ -1734,21 +1740,12 @@ class UIController {
                         Command Prompt - ${nf.name} (${nf.config.ipAddress})
                     </div>
                     <div class="terminal-controls">
-                        <button class="terminal-btn minimize">−</button>
-                        <button class="terminal-btn maximize">□</button>
                         <button class="terminal-btn close" id="terminal-close">×</button>
                     </div>
                 </div>
                 <div class="windows-terminal-content" id="terminal-content">
-                    <div class="terminal-header">
-                        Microsoft Windows [Version 10.0.19045.3570]<br>
-                        (c) Microsoft Corporation. All rights reserved.<br><br>
-                    </div>
+                    
                     <div class="terminal-output" id="terminal-output"></div>
-                    <div class="terminal-input-line">
-                        <span class="terminal-prompt">C:\\${nf.name}></span>
-                        <input type="text" id="terminal-input" class="terminal-input" autocomplete="off" spellcheck="false">
-                    </div>
                 </div>
             </div>
         `;
@@ -1762,12 +1759,6 @@ class UIController {
         setTimeout(() => {
             terminalModal.classList.add('show');
         }, 10);
-
-        // Focus on input
-        const input = document.getElementById('terminal-input');
-        if (input) {
-            input.focus();
-        }
     }
 
     /**
@@ -1776,12 +1767,15 @@ class UIController {
      * @param {HTMLElement} terminalModal - Terminal modal element
      */
     setupWindowsTerminal(nf, terminalModal) {
-        const input = document.getElementById('terminal-input');
         const output = document.getElementById('terminal-output');
         const closeBtn = document.getElementById('terminal-close');
+        const content = document.getElementById('terminal-content');
         
         let commandHistory = [];
         let historyIndex = -1;
+        let currentInputLine = null;
+        let cursorPosition = 0;
+        let currentText = '';
 
         // Close button
         closeBtn.addEventListener('click', () => {
@@ -1798,46 +1792,224 @@ class UIController {
             }
         });
 
-        // Input handling
-        input.addEventListener('keydown', async (e) => {
+        // Update input display with cursor
+        const updateInputDisplay = () => {
+            if (!currentInputLine) return;
+            const beforeCursor = currentText.slice(0, cursorPosition);
+            const atCursor = currentText[cursorPosition] || '';
+            const afterCursor = currentText.slice(cursorPosition + 1);
+            
+            currentInputLine.innerHTML = `
+                <span class="terminal-prompt">C:\\${nf.name}></span>
+                <span class="terminal-input-text">${beforeCursor}<span class="terminal-cursor-char">${atCursor || '█'}</span>${afterCursor}</span>
+            `;
+        };
+
+        // Create input line for realistic terminal
+        const createInputLine = () => {
+            if (currentInputLine) {
+                currentInputLine.remove();
+            }
+
+            const inputLine = document.createElement('div');
+            inputLine.className = 'terminal-input-line';
+            output.appendChild(inputLine);
+            currentInputLine = inputLine;
+            cursorPosition = 0;
+            currentText = '';
+            updateInputDisplay();
+            
+            output.scrollTop = output.scrollHeight;
+            content.scrollTop = content.scrollHeight;
+        };
+
+        // Handle keyboard input
+        const handleKeyInput = async (e) => {
+            // Handle Ctrl+C for copy
+            if ((e.ctrlKey || e.metaKey) && e.key === 'c') {
+                e.preventDefault();
+                const selectedText = window.getSelection().toString();
+                if (selectedText) {
+                    navigator.clipboard.writeText(selectedText).catch(err => console.error('Copy failed:', err));
+                    return;
+                }
+            }
+
+            // Handle Ctrl+V for paste
+            if ((e.ctrlKey || e.metaKey) && e.key === 'v') {
+                e.preventDefault();
+                navigator.clipboard.readText().then(text => {
+                    currentText = currentText.slice(0, cursorPosition) + text + currentText.slice(cursorPosition);
+                    cursorPosition += text.length;
+                    updateInputDisplay();
+                }).catch(err => console.error('Paste failed:', err));
+                return;
+            }
+
+            // Handle Ctrl+C to cancel current input (if no selection)
+            if (e.ctrlKey && e.key === 'c') {
+                e.preventDefault();
+                if (currentInputLine) {
+                    currentInputLine.innerHTML = `
+                        <span class="terminal-prompt">C:\\${nf.name}></span>
+                        <span class="terminal-input-text">${currentText}</span>
+                    `;
+                    currentInputLine.classList.add('terminal-command');
+                    currentInputLine = null;
+                }
+                this.addTerminalLine(output, '^C', 'info');
+                createInputLine();
+                return;
+            }
+
+            // Handle Ctrl+L to clear screen
+            if (e.ctrlKey && e.key === 'l') {
+                e.preventDefault();
+                output.innerHTML = '';
+                createInputLine();
+                return;
+            }
+
             if (e.key === 'Enter') {
-                const command = input.value.trim();
+                e.preventDefault();
+                const command = currentText.trim();
+                
+                if (currentInputLine) {
+                    currentInputLine.innerHTML = `
+                        <span class="terminal-prompt">C:\\${nf.name}></span>
+                        <span class="terminal-input-text">${currentText}</span>
+                    `;
+                    currentInputLine.classList.add('terminal-command');
+                    currentInputLine = null;
+                }
+
                 if (command) {
-                    // Add to history
                     commandHistory.push(command);
                     historyIndex = commandHistory.length;
-
-                    // Display command
-                    this.addTerminalLine(output, `C:\\${nf.name}>${command}`, 'command');
-                    
-                    // Clear input
-                    input.value = '';
-
-                    // Process command
                     await this.processWindowsCommand(nf, command, output);
                 }
+                
+                createInputLine();
             } else if (e.key === 'ArrowUp') {
                 e.preventDefault();
                 if (historyIndex > 0) {
                     historyIndex--;
-                    input.value = commandHistory[historyIndex];
+                    currentText = commandHistory[historyIndex] || '';
+                    cursorPosition = currentText.length;
+                    updateInputDisplay();
                 }
             } else if (e.key === 'ArrowDown') {
                 e.preventDefault();
                 if (historyIndex < commandHistory.length - 1) {
                     historyIndex++;
-                    input.value = commandHistory[historyIndex];
+                    currentText = commandHistory[historyIndex] || '';
+                    cursorPosition = currentText.length;
+                    updateInputDisplay();
                 } else {
                     historyIndex = commandHistory.length;
-                    input.value = '';
+                    currentText = '';
+                    cursorPosition = 0;
+                    updateInputDisplay();
                 }
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                if (cursorPosition > 0) {
+                    cursorPosition--;
+                    updateInputDisplay();
+                }
+            } else if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                if (cursorPosition < currentText.length) {
+                    cursorPosition++;
+                    updateInputDisplay();
+                }
+            } else if (e.key === 'Backspace') {
+                e.preventDefault();
+                if (cursorPosition > 0) {
+                    currentText = currentText.slice(0, cursorPosition - 1) + currentText.slice(cursorPosition);
+                    cursorPosition--;
+                    updateInputDisplay();
+                }
+            } else if (e.key === 'Delete') {
+                e.preventDefault();
+                if (cursorPosition < currentText.length) {
+                    currentText = currentText.slice(0, cursorPosition) + currentText.slice(cursorPosition + 1);
+                    updateInputDisplay();
+                }
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                cursorPosition = 0;
+                updateInputDisplay();
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                cursorPosition = currentText.length;
+                updateInputDisplay();
+            } else if (e.key === 'Tab') {
+                e.preventDefault();
+                const partial = currentText.toLowerCase().trim();
+                if (!partial) return;
+
+                // All available commands (no flags)
+                const allCommands = [
+                    'ping', 'ping subnet',
+                    'ifconfig', 'cls', 'clear', 'exit',
+                    'dir', 'systeminfo', 'netstat', 'help'
+                ];
+
+                const matches = allCommands.filter(cmd => cmd.startsWith(partial));
+
+                if (matches.length === 0) return;
+
+                // Find common prefix across matches
+                let commonPrefix = matches[0];
+                for (let i = 1; i < matches.length; i++) {
+                    let j = 0;
+                    while (j < commonPrefix.length && j < matches[i].length && commonPrefix[j] === matches[i][j]) j++;
+                    commonPrefix = commonPrefix.slice(0, j);
+                }
+
+                // Only fill up to the next word boundary
+                const afterPartial = commonPrefix.slice(partial.length);
+                const nextSpaceIdx = afterPartial.indexOf(' ');
+                const fillTo = nextSpaceIdx === -1
+                    ? commonPrefix
+                    : partial + afterPartial.slice(0, nextSpaceIdx);
+
+                if (fillTo.length > partial.length) {
+                    currentText = fillTo;
+                    cursorPosition = currentText.length;
+                    updateInputDisplay();
+                } else {
+                    // Already at boundary — show all options
+                    if (currentInputLine) {
+                        currentInputLine.innerHTML = `
+                            <span class="terminal-prompt">C:\\${nf.name}></span>
+                            <span class="terminal-input-text">${currentText}</span>
+                        `;
+                        currentInputLine.classList.add('terminal-command');
+                        currentInputLine = null;
+                    }
+                    this.addTerminalLine(output, matches.join('    '), 'info');
+                    createInputLine();
+                    currentText = partial;
+                    cursorPosition = currentText.length;
+                    updateInputDisplay();
+                }
+            } else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+                e.preventDefault();
+                currentText = currentText.slice(0, cursorPosition) + e.key + currentText.slice(cursorPosition);
+                cursorPosition++;
+                updateInputDisplay();
             }
-        });
+        };
+
+        document.addEventListener('keydown', handleKeyInput);
+        terminalModal._keyHandler = handleKeyInput;
 
         // Initial welcome message
-        this.addTerminalLine(output, `Connected to ${nf.name} (${nf.config.ipAddress})`, 'info');
+        this.addTerminalLine(output, '5G WIRELESS LAB', 'info');
         this.addTerminalLine(output, 'Type "help" for available commands.', 'info');
-        this.addTerminalLine(output, '', 'blank');
+        createInputLine();
     }
 
     /**
@@ -1852,7 +2024,7 @@ class UIController {
 
         if (cmd === 'help' || cmd === '?') {
             this.showWindowsHelp(output);
-        } else if (cmd === 'ipconfig') {
+        } else if (cmd === 'ifconfig') {
             this.showIPConfig(nf, output);
         } else if (cmd.startsWith('ping ')) {
             const target = args[1];
@@ -1868,8 +2040,6 @@ class UIController {
         } else if (cmd === 'exit') {
             const closeBtn = document.getElementById('terminal-close');
             if (closeBtn) closeBtn.click();
-        } else if (cmd === 'dir') {
-            this.showDirectory(output);
         } else if (cmd === 'systeminfo') {
             this.showSystemInfo(nf, output);
         } else if (cmd === 'netstat') {
@@ -1909,7 +2079,7 @@ class UIController {
             'Available commands:',
             '',
             'HELP        - Display this help message',
-            'IPCONFIG    - Display network configuration',
+            'IFCONFIG    - Display network configuration',
             'PING        - Test network connectivity',
             'SYSTEMINFO  - Display system information',
             'NETSTAT     - Display network connections',
