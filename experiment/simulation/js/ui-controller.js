@@ -1062,10 +1062,10 @@ class UIController {
      * @param {Object} nf - Network Function
      */
     async autoConnectToBusIfApplicable(nf) {
-        // Don't auto-connect UPF, gNB, and UE as per requirement
+        // Don't auto-connect UPF, gNB, and UE to the service bus
         const excludedTypes = ['UPF', 'gNB', 'UE'];
         if (excludedTypes.includes(nf.type)) {
-            console.log(`🚫 Skipping auto-connect for ${nf.type} (excluded type)`);
+            console.log(`🚫 Skipping bus auto-connect for ${nf.type} (excluded type)`);
             return;
         }
 
@@ -1951,7 +1951,7 @@ class UIController {
 
                 // All available commands (no flags)
                 const allCommands = [
-                    'ping', 'ping subnet',
+                    'ping', 
                     'ifconfig', 'cls', 'clear', 'exit',
                     'dir', 'systeminfo', 'netstat', 'help'
                 ];
@@ -2028,13 +2028,14 @@ class UIController {
             this.showIPConfig(nf, output);
         } else if (cmd.startsWith('ping ')) {
             const target = args[1];
-            if (target) {
-                await this.executeWindowsPing(nf, target, output);
-            } else {
+            if (!target) {
                 this.addTerminalLine(output, 'Usage: ping <hostname or IP address>', 'error');
+            } else if (cmd === 'ping subnet' || !this.isValidIP(target)) {
+                this.addTerminalLine(output, `'${command}' is not recognized as an internal or external command,`, 'error');
+                this.addTerminalLine(output, 'operable program or batch file.', 'error');
+            } else {
+                await this.executeWindowsPing(nf, target, output);
             }
-        } else if (cmd === 'ping subnet') {
-            await this.executeWindowsPingSubnet(nf, output);
         } else if (cmd === 'cls' || cmd === 'clear') {
             output.innerHTML = '';
         } else if (cmd === 'exit') {

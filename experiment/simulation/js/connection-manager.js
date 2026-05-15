@@ -68,7 +68,7 @@ class ConnectionManager {
      * @returns {Object|null} Created connection or null if invalid
      */
     createConnection(sourceId, targetId, isManual = true) {
-        console.log('🔗 Creating connection:', sourceId, '→', targetId);
+        console.log('🔗 Creating connection:', sourceId, '→', targetId, '(isManual:', isManual, ')');
 
         // Get both NFs
         const sourceNF = window.dataStore.getNFById(sourceId);
@@ -81,48 +81,52 @@ class ConnectionManager {
 
         // Prevent self-connection
         if (sourceId === targetId) {
-            alert('Cannot connect an NF to itself');
+            if (isManual) alert('Cannot connect an NF to itself');
+            console.log('❌ Cannot self-connect');
             return null;
         }
 
         // Check if connection already exists
         if (window.dataStore.connectionExists(sourceId, targetId)) {
-            alert(`Connection already exists between ${sourceNF.name} and ${targetNF.name}`);
+            if (isManual) alert(`Connection already exists between ${sourceNF.name} and ${targetNF.name}`);
+            console.log('❌ Connection already exists');
             return null;
         }
 
-        // NEW: Check subnet restriction - NFs can only connect within same subnet
-        const sourceNetwork = this.getNetworkFromIP(sourceNF.config.ipAddress);
-        const targetNetwork = this.getNetworkFromIP(targetNF.config.ipAddress);
-        
-        if (sourceNetwork !== targetNetwork) {
-            alert(`❌ Subnet Restriction!\n\n` +
-                  `${sourceNF.name} (${sourceNF.config.ipAddress}) is in subnet ${sourceNetwork}.0/24\n` +
-                  `${targetNF.name} (${targetNF.config.ipAddress}) is in subnet ${targetNetwork}.0/24\n\n` +
-                  `Network Functions can only connect within the same subnet.\n\n` +
-                  `Please move one of the services to the same subnet to establish connection.`);
+        // CRITICAL FIX: Only check subnet for MANUAL connections, skip for auto-connections
+        // Auto-connections are guaranteed same-subnet due to getNextAvailableIP fix
+        if (isManual) {
+            const sourceNetwork = this.getNetworkFromIP(sourceNF.config.ipAddress);
+            const targetNetwork = this.getNetworkFromIP(targetNF.config.ipAddress);
             
-            // Log the restriction
-            if (window.logEngine) {
-                window.logEngine.addLog(sourceId, 'ERROR',
-                    `Connection blocked: Cross-subnet communication not allowed`, {
-                    sourceNF: sourceNF.name,
-                    sourceIP: sourceNF.config.ipAddress,
-                    sourceSubnet: sourceNetwork + '.0/24',
-                    targetNF: targetNF.name,
-                    targetIP: targetNF.config.ipAddress,
-                    targetSubnet: targetNetwork + '.0/24',
-                    restriction: 'Same-subnet communication only',
-                    solution: 'Move services to same subnet'
-                });
+            if (sourceNetwork !== targetNetwork) {
+                alert(`❌ Subnet Restriction!\n\n` +
+                      `${sourceNF.name} (${sourceNF.config.ipAddress}) is in subnet ${sourceNetwork}.0/24\n` +
+                      `${targetNF.name} (${targetNF.config.ipAddress}) is in subnet ${targetNetwork}.0/24\n\n` +
+                      `Network Functions can only connect within the same subnet.\n\n` +
+                      `Please move one of the services to the same subnet to establish connection.`);
+                
+                if (window.logEngine) {
+                    window.logEngine.addLog(sourceId, 'ERROR',
+                        `Connection blocked: Cross-subnet communication not allowed`, {
+                        sourceNF: sourceNF.name,
+                        sourceIP: sourceNF.config.ipAddress,
+                        sourceSubnet: sourceNetwork + '.0/24',
+                        targetNF: targetNF.name,
+                        targetIP: targetNF.config.ipAddress,
+                        targetSubnet: targetNetwork + '.0/24'
+                    });
+                }
+                return null;
             }
-            
-            return null;
         }
 
         // Validate connection is allowed (3GPP compliance)
         if (!this.isConnectionValid(sourceNF.type, targetNF.type)) {
-            alert(`Invalid connection: ${sourceNF.type} cannot connect to ${targetNF.type}\n\nPer 3GPP specifications, this connection is not allowed.`);
+            console.log(`❌ Invalid connection: ${sourceNF.type} → ${targetNF.type} not allowed by 3GPP rules`);
+            if (isManual) {
+                alert(`Invalid connection: ${sourceNF.type} cannot connect to ${targetNF.type}\n\nPer 3GPP specifications, this connection is not allowed.`);
+            }
             return null;
         }
 
