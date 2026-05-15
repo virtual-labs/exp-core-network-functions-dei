@@ -2114,6 +2114,32 @@ networks:
                         readyForConnections: true
                     });
                 }
+
+                // UPF: auto-create visual N4 connection to SMF if SMF exists
+                if (updatedNF.type === 'UPF' && window.connectionManager) {
+                    const allNFs = window.dataStore.getAllNFs();
+                    const smf = allNFs.find(n => n.type === 'SMF');
+                    if (smf) {
+                        const alreadyConnected = window.dataStore.connectionExists(updatedNF.id, smf.id);
+                        if (!alreadyConnected) {
+                            window.connectionManager.createManualConnection(updatedNF.id, smf.id);
+                            console.log(`✅ Auto-created N4 visual connection: ${updatedNF.name} → ${smf.name}`);
+                        }
+                    }
+                }
+
+                // SMF: auto-create visual N4 connection to UPF if UPF exists
+                if (updatedNF.type === 'SMF' && window.connectionManager) {
+                    const allNFs = window.dataStore.getAllNFs();
+                    const upf = allNFs.find(n => n.type === 'UPF');
+                    if (upf) {
+                        const alreadyConnected = window.dataStore.connectionExists(updatedNF.id, upf.id);
+                        if (!alreadyConnected) {
+                            window.connectionManager.createManualConnection(updatedNF.id, upf.id);
+                            console.log(`✅ Auto-created N4 visual connection: ${updatedNF.name} → ${upf.name}`);
+                        }
+                    }
+                }
                 
                 if (window.canvasRenderer) window.canvasRenderer.render();
             }

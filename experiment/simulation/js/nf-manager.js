@@ -669,25 +669,28 @@ class NFManager {
                 );
 
                 if (!alreadyConnected && window.connectionManager) {
-                    // Create auto-connection (logical only, no visual line)
-                    const connection = window.connectionManager.createAutoConnection(nf.id, targetNF.id);
+                    // UPF→SMF must be a visual connection (N4 interface shown on canvas)
+                    // All other auto-connections are logical only (no visual line)
+                    const isVisual = (nf.type === 'UPF' && targetType === 'SMF') ||
+                                     (nf.type === 'SMF' && targetType === 'UPF');
+                    const connection = isVisual
+                        ? window.connectionManager.createManualConnection(nf.id, targetNF.id)
+                        : window.connectionManager.createAutoConnection(nf.id, targetNF.id);
                     if (connection) {
                         connectionsCreated++;
                         console.log(`✅ Auto-connected ${nf.name} → ${targetNF.name} (same subnet: ${sourceNetwork}.0/24)`);
                         
-                        // Log auto-connection with subnet info
                         if (window.logEngine) {
                             window.logEngine.addLog(nf.id, 'INFO',
-                                `Auto-connected to ${targetNF.name} (logical connection - no visual line)`, {
+                                `Auto-connected to ${targetNF.name} via ${connection.interfaceName}`, {
                                 targetType: targetNF.type,
                                 interface: connection.interfaceName,
                                 autoConnection: true,
-                                visualConnection: false,
+                                visualConnection: isVisual,
                                 subnet: sourceNetwork + '.0/24',
                                 sourceIP: nf.config.ipAddress,
                                 targetIP: targetNF.config.ipAddress,
-                                reason: '5G architecture requirement + subnet restriction',
-                                note: 'Connection exists for communication but not shown on canvas'
+                                reason: '5G architecture requirement'
                             });
                         }
                     }
@@ -702,7 +705,7 @@ class NFManager {
                 
                 if (allTargetsOfType.length > 0) {
                     connectionsBlocked++;
-                    console.log(`🚫 Auto-connection blocked: ${targetType} exists but not in same subnet as ${nf.name}`);
+                    console.log(`� Auto-connection blocked: ${targetType} exists but not in same subnet as ${nf.name}`);
                 }
             }
         });
