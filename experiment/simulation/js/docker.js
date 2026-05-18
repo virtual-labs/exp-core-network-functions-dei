@@ -50,8 +50,22 @@ class DockerTerminal {
         // Remove existing terminal if any
         const existingTerminal = document.getElementById('docker-terminal-modal');
         if (existingTerminal) {
+            // Remove stale key handlers before destroying the old terminal
+            if (existingTerminal._keyHandler) {
+                document.removeEventListener('keydown', existingTerminal._keyHandler);
+            }
+            if (existingTerminal._copyPasteHandler) {
+                document.removeEventListener('keydown', existingTerminal._copyPasteHandler);
+            }
             existingTerminal.remove();
         }
+
+        // Force-reset watch state unconditionally so reopening never blocks the watch command
+        if (this.watchInterval) {
+            clearInterval(this.watchInterval);
+            this.watchInterval = null;
+        }
+        this.isWatching = false;
 
         // Create terminal modal
         const terminalModal = document.createElement('div');
@@ -116,6 +130,13 @@ class DockerTerminal {
         // Close button
         closeBtn.addEventListener('click', () => {
             this.stopWatch();
+            // Remove key handlers using stored references to prevent leaks across sessions
+            if (terminalModal._keyHandler) {
+                document.removeEventListener('keydown', terminalModal._keyHandler);
+            }
+            if (terminalModal._copyPasteHandler) {
+                document.removeEventListener('keydown', terminalModal._copyPasteHandler);
+            }
             terminalModal.classList.remove('show');
             setTimeout(() => {
                 terminalModal.remove();
@@ -175,22 +196,6 @@ class DockerTerminal {
                 this.addTerminalLine(output, '', 'blank');
                 this.addTerminalLine(output, 'Watch mode stopped.', 'info');
                 this.addTerminalLine(output, '', 'blank');
-                createInputLine();
-                return;
-            }
-
-            // Handle Ctrl+C to cancel current input
-            if (e.ctrlKey && e.key === 'c' && !this.isWatching) {
-                e.preventDefault();
-                if (currentInputLine) {
-                    currentInputLine.innerHTML = `
-                        <span class="docker-terminal-prompt">docker@main></span>
-                        <span class="docker-terminal-input-text">${currentText}</span>
-                    `;
-                    currentInputLine.classList.add('docker-terminal-command');
-                    currentInputLine = null;
-                }
-                this.addTerminalLine(output, '^C', 'info');
                 createInputLine();
                 return;
             }
@@ -1313,8 +1318,8 @@ networks:
         if (this.watchInterval) {
             clearInterval(this.watchInterval);
             this.watchInterval = null;
-            this.isWatching = false;
         }
+        this.isWatching = false;
     }
 
     /**

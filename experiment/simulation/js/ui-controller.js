@@ -1242,6 +1242,15 @@ class UIController {
             });
         }
 
+        // Keep NF filter dropdown in sync whenever NFs are added or removed
+        if (window.dataStore) {
+            window.dataStore.subscribe((event) => {
+                if (event === 'nf-added' || event === 'nf-removed' || event === 'data-imported') {
+                    this.updateLogNFFilter();
+                }
+            });
+        }
+
         // Setup log controls
         const filterNF = document.getElementById('log-filter-nf');
         const filterLevel = document.getElementById('log-filter-level');
