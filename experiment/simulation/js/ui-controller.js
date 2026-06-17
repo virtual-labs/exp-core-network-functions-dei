@@ -785,7 +785,7 @@ class UIController {
             
             <div class="form-group">
                 
-                <input type="number" id="config-port" value="${defaultPort}" required>
+                <input type="number" id="config-port" value="${defaultPort}" min="1000" max="999999" required>
             
             </div>
             
@@ -843,6 +843,22 @@ class UIController {
         cancelBtn.addEventListener('click', () => {
             this.hideNFConfigPanel();
         });
+
+        // IP input listener to only allow digits and dots
+        const configIP = document.getElementById('config-ip');
+        if (configIP) {
+            configIP.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/[^0-9.]/g, '');
+            });
+        }
+
+        // Port input listener to only allow numeric characters
+        const configPort = document.getElementById('config-port');
+        if (configPort) {
+            configPort.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/\D/g, '');
+            });
+        }
     }
 
     /**
@@ -868,7 +884,7 @@ class UIController {
             
             <div class="form-group">
                 <label>Port</label>
-                <input type="number" id="config-port" value="${nf.config.port}">
+                <input type="number" id="config-port" value="${nf.config.port}" min="1000" max="999999">
             </div>
             
             
@@ -940,6 +956,22 @@ class UIController {
 
         // Ping troubleshooting handlers
         this.setupPingTroubleshootingHandlers(nf.id);
+
+        // IP input listener to only allow digits and dots
+        const configIP = document.getElementById('config-ip');
+        if (configIP) {
+            configIP.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/[^0-9.]/g, '');
+            });
+        }
+
+        // Port input listener to only allow numeric characters
+        const configPort = document.getElementById('config-port');
+        if (configPort) {
+            configPort.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/\D/g, '');
+            });
+        }
     }
 
     /**
@@ -948,13 +980,22 @@ class UIController {
      */
     startNewNetworkFunction(nfType) {
         const ipAddress = document.getElementById('config-ip')?.value;
-        const port = parseInt(document.getElementById('config-port')?.value);
+        const portInput = document.getElementById('config-port')?.value;
         const httpProtocol = document.getElementById('config-http-protocol')?.value;
 
-        if (!ipAddress || !port) {
+        if (!ipAddress || !portInput) {
             alert('Please fill all required fields');
             return;
         }
+
+        // Check if port only contains numeric characters
+        const portNumericRegex = /^\d+$/;
+        if (!portNumericRegex.test(portInput)) {
+            alert('❌ Invalid Entries!\n\nPlease ensure:\n• IP address is between 1.0.0.0 and 255.255.255.255\n• IP 0.0.0.0 is not allowed\n• Port must have 4 to 6 digits and only contain numeric characters\n• No special characters or letters are allowed in IP or Port fields');
+            return;
+        }
+
+        const port = parseInt(portInput);
         
         // Generate unique default name automatically
         const count = (window.nfManager?.nfCounters[nfType] || 0) + 1;
@@ -962,7 +1003,14 @@ class UIController {
 
         // Validate IP address format
         if (!this.isValidIP(ipAddress)) {
-            alert('❌ Invalid IP address format!\n\nPlease enter a valid IP address (e.g., 192.168.1.20)');
+            alert('❌ Invalid Entries!\n\nPlease ensure:\n• IP address is between 1.0.0.0 and 255.255.255.255\n• IP 0.0.0.0 is not allowed\n• Port must have 4 to 6 digits and only contain numeric characters\n• No special characters or letters are allowed in IP or Port fields');
+            return;
+        }
+
+        // Validate port number (must be 4-6 digits)
+        const portStr = port.toString();
+        if (portStr.length < 4 || portStr.length > 6) {
+            alert('❌ Invalid Entries!\n\nPlease ensure:\n• IP address is between 1.0.0.0 and 255.255.255.255\n• IP 0.0.0.0 is not allowed\n• Port must have 4 to 6 digits and only contain numeric characters\n• No special characters or letters are allowed in IP or Port fields');
             return;
         }
 
@@ -1130,17 +1178,33 @@ class UIController {
      */
     saveNFConfig(nfId) {
         const ipAddress = document.getElementById('config-ip')?.value;
-        const port = parseInt(document.getElementById('config-port')?.value);
+        const portInput = document.getElementById('config-port')?.value;
         const httpProtocol = document.getElementById('config-http-protocol')?.value;
 
-        if (!ipAddress || !port) {
+        if (!ipAddress || !portInput) {
             alert('Please fill all required fields');
             return;
         }
 
+        // Check if port only contains numeric characters
+        const portNumericRegex = /^\d+$/;
+        if (!portNumericRegex.test(portInput)) {
+            alert('❌ Invalid Entries!\n\nPlease ensure:\n• IP address is between 1.0.0.0 and 255.255.255.255\n• IP 0.0.0.0 is not allowed\n• Port must have 4 to 6 digits and only contain numeric characters\n• No special characters or letters are allowed in IP or Port fields');
+            return;
+        }
+
+        const port = parseInt(portInput);
+
         // Validate IP address format
         if (!this.isValidIP(ipAddress)) {
-            alert('❌ Invalid IP address format!\n\nPlease enter a valid IP address (e.g., 192.168.1.20)');
+            alert('❌ Invalid Entries!\n\nPlease ensure:\n• IP address is between 1.0.0.0 and 255.255.255.255\n• IP 0.0.0.0 is not allowed\n• Port must have 4 to 6 digits and only contain numeric characters\n• No special characters or letters are allowed in IP or Port fields');
+            return;
+        }
+
+        // Validate port number (must be 4-6 digits)
+        const portStr = port.toString();
+        if (portStr.length < 4 || portStr.length > 6) {
+            alert('❌ Invalid Entries!\n\nPlease ensure:\n• IP address is between 1.0.0.0 and 255.255.255.255\n• IP 0.0.0.0 is not allowed\n• Port must have 4 to 6 digits and only contain numeric characters\n• No special characters or letters are allowed in IP or Port fields');
             return;
         }
 
@@ -2473,7 +2537,15 @@ class UIController {
      */
     isValidIP(ip) {
         const ipRegex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-        return ipRegex.test(ip);
+        if (!ipRegex.test(ip)) {
+            return false;
+        }
+        const octets = ip.split('.').map(Number);
+        return octets[0] >= 1 && octets[0] <= 255 && 
+               octets[1] >= 0 && octets[1] <= 255 && 
+               octets[2] >= 0 && octets[2] <= 255 && 
+               octets[3] >= 0 && octets[3] <= 255 &&
+               !(octets[0] === 0 && octets[1] === 0 && octets[2] === 0 && octets[3] === 0);
     }
 
     /**
