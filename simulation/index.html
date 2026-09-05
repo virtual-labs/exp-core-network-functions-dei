@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5G SBA Network Dashboard</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+    <!-- Main Container -->
+    <div class="dashboard-container">
+
+        <!-- Top Toolbar -->
+        <div class="toolbar">
+            <div class="toolbar-left">
+                <h1>🌐 Core Network Functions</h1>
+            </div>
+            <div class="toolbar-right">
+                <!-- Main action buttons -->
+                <button id="btn-terminal" class="btn btn-primary">💻 Terminal</button>
+                <button id="btn-add-nf" class="btn btn-primary">➕ Add NF</button>
+                <button id="btn-clear" class="btn btn-danger">🗑️ Clears</button>
+                <button id="btn-validate" class="btn btn-info">✓ Validate</button>
+                <button id="btn-help" class="btn btn-secondary">❓ Help</button>
+            </div>
+        </div>
+
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+
+            <!-- Left Sidebar - NF Palette -->
+            <div class="sidebar-left">
+                <h3>Network Functions</h3>
+                <div class="nf-palette">
+                    <!-- NF types will be dynamically added here -->
+                </div>
+
+                <div class="connection-controls">
+                    <h3>Create Connection</h3>
+                    <button id="btn-select-source" class="btn btn-block">Select Source</button>
+                    <button id="btn-select-destination" class="btn btn-block" disabled>Select Destination</button>
+                    <button id="btn-cancel-connection" class="btn btn-block btn-cancel"
+                        style="display:none;">Cancel</button>
+                </div>
+            </div>
+
+            <!-- Center Canvas Area -->
+            <div class="canvas-container">
+                <canvas id="main-canvas"></canvas>
+
+                <!-- Canvas overlay messages -->
+                <div id="canvas-message" class="canvas-message"></div>
+            </div>
+
+            <!-- Right Sidebar - Configuration Panel -->
+            <div class="sidebar-right">
+                <div id="config-panel" class="config-panel">
+                    <div class="config-panel-header">
+                        <h3>⚙️ Configuration</h3>
+                        <button id="btn-toggle-config" class="btn-toggle-config" title="Hide/Show Configuration Panel (Ctrl+K)">
+                            <span id="config-toggle-icon">◀</span>
+                        </button>
+                    </div>
+                    <!-- Configuration form will be dynamically inserted here -->
+                    <div id="config-form">
+                        <p class="hint">Select a Network Function type to configure and start it</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Bottom Log Panel -->
+        <div class="log-panel" id="log-panel">
+            <div class="log-panel-header">
+                <div class="log-header-left">
+                    <h3>📋 Network Function Logs</h3>
+                    <button id="btn-toggle-logs" class="btn-toggle-logs" title="Hide/Show Logs (Ctrl+L)">
+                        <span id="toggle-icon">▼</span>
+                    </button>
+                </div>
+                <div class="log-controls">
+                    <select id="log-filter-nf">
+                        <option value="all">All NFs</option>
+                    </select>
+                    <select id="log-filter-level">
+                        <option value="all">All Levels</option>
+                        <option value="ERROR">Errors</option>
+                        <option value="WARNING">Warnings</option>
+                        <option value="INFO">Info</option>
+                        <option value="SUCCESS">Success</option>
+                    </select>
+                    <button id="btn-clear-logs" class="btn-small">Clear</button>
+                    <button id="btn-export-logs" class="btn-small">Export</button>
+                </div>
+            </div>
+            <div id="log-content" class="log-content">
+                <!-- Logs will be dynamically added here -->
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modal for Adding NF -->
+    <div id="add-nf-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <h2>Select Network Function Type</h2>
+            <div id="nf-grid" class="nf-grid">
+                <!-- NF selection buttons will be added here -->
+            </div>
+            <button id="modal-cancel" class="btn btn-secondary">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="help-modal" class="modal" style="display:none;">
+        <div class="modal-content help-modal-content">
+            <h2>📚 5G Service-Based Architecture Guide</h2>
+            <div class="help-content">
+                <ol class="help-steps">
+                    <li><span>Open the SBA Dashboard and verify all panels are loaded properly.</span></li>
+                    <li><span>Open the <strong>Terminal</strong> from the toolbar.</span></li>
+                    <li><span>Run <code>docker compose -f docker-compose.yml up -d</code> to start all Network Functions at once.</span></li>
+                    <li><span>Or run <code>docker compose -f docker-compose.yml up -d &lt;service-name&gt;</code> to start a specific NF (e.g., <code>oai-nrf</code>).</span></li>
+                    <li><span>Alternatively, select an NF from the left palette to configure and start it manually.</span></li>
+                    <li><span>Enter a valid IP address, port number, and HTTP protocol, then click <strong>Start NF</strong>.</span></li>
+                    <li><span>Wait 4–5 seconds for the NF to stabilize and register with the NRF.</span></li>
+                    <li><span>Check the Logs Section for <em>"NF started successfully"</em> and <em>"Service registration complete"</em>.</span></li>
+                    <li><span>Repeat steps 5–8 for all remaining NFs (AMF, SMF, UPF, UDM, AUSF, PCF, etc.).</span></li>
+                    <li><span>Check running networks using <code>docker network ls</code>.</span></li>
+                    <li><span>Verify NF IPs using <code>docker network inspect oaiworkshop</code>.</span></li>
+                    <li><span>Click an NF, open its <strong>Command Prompt</strong>, and run <code>ping &lt;target_IP&gt;</code> to validate NF-to-NF connectivity.</span></li>
+                    <li><span>Check ping output — zero packet loss confirms the components can reach each other.</span></li>
+                    <li><span>Stop all services using <code>docker compose -f docker-compose.yml down</code>.</span></li>
+                </ol>
+            </div>
+            <div class="help-footer">
+                <a href="../procedure.html" target="_blank" class="btn-view-procedures">
+                    For More Details... 📄 View Full Procedures
+                </a>
+                <button id="help-close" class="btn-help-close">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load all JavaScript files in correct order -->
+    <script src="js/data-store.js"></script>
+    <script src="js/nf-manager.js"></script>
+    <script src="js/connection-manager.js"></script>
+    <script src="js/bus-manager.js"></script>
+    <script src="js/ping-manager.js"></script>
+    <script src="js/log-engine.js"></script>
+    <script src="js/canvas-renderer.js"></script>
+    <script src="js/docker.js"></script>
+    <script src="js/ui-controller.js"></script>
+    <script src="js/app.js"></script>
+<script src="../assets/js/iframeResize.js"></script>
+        
+        </body>
+
+</html>

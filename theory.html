@@ -1,0 +1,733 @@
+<!DOCTYPE html><html lang="en"><head>
+      <!--Google Tag Manager-->
+      <script class="gtm">
+        var dataLayer = [{
+        'labName': 'Virtual Lab',
+        'discipline': 'Test',
+        'college': 'DLBG',
+        'phase': 'Testing',
+        'expName': 'IMPLEMENTATION OF CORE NETWORK (CN) FUNCTION (NFV)',
+        'expShortName': 'core-network-functions'
+        }];
+    
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&amp;l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-5NMQ9NQ');
+      </script>
+      <!--End Google Tag Manager-->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="" name="description">
+    <meta content="" name="author">
+    
+    	<meta name="experiment-short-name" content="core-network-functions">
+    	<meta name="developer-institute" content="DLBG">
+    	<meta name="learning-unit" content="IMPLEMENTATION OF CORE NETWORK (CN) FUNCTION (NFV)">
+    	<meta name="task-name" content="Theory">
+    
+    <!-- For iPhone -->
+    <meta name="msapplication-TileColor" content="#4076e0">
+    <!-- Chrome, Firefox OS and Opera -->
+    <meta name="theme-color" content="#4076e0">
+    <!-- Windows Phone -->
+    <meta name="msapplication-navbutton-color" content="#4076e0">
+    <title>Virtual Labs</title>
+    <link rel="shortcut icon" href="./assets/images/favicon.ico">
+    <link rel="stylesheet" href="./assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css" integrity="sha512-Oy18vBnbSJkXTndr2n6lDMO5NN31UljR8e/ICzVPrGpSud4Gkckb8yUpqhKuUNoE+o9gAb4O/rAxxw1ojyUVzg==" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&amp;family=Raleway&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./assets/css/github-markdown.min.css">
+    <link rel="stylesheet" href="./assets/css/vlabs-style.css">
+    <link rel="stylesheet" href="./assets/css/toast.css">
+    <link rel="stylesheet" href="./assets/katex_assets/katex.min.css">
+    
+    <script src="./assets/js/jquery-3.4.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+      h1 {
+      font-size: 1.8rem;
+      }
+      h2 {
+      font-size: 1.4rem;
+      }
+      h3 {
+      font-size: 1.2rem;
+      }
+
+      h2, h3 {
+      font-weight: 800;
+      }
+    </style>
+    
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"></head>
+  <body class="p-0 container-fluid vlabs-page d-flex flex-column justify-content-between">
+      <!--Google Tag Manager (noscript)-->
+      <noscript class="gtm">
+        <iframe height="0" src="https://www.googletagmanager.com/ns.html?id=GTM-5NMQ9NQ" style="display:none;visibility:hidden" width="0">
+        </iframe>
+      </noscript>
+      <!--End Google Tag Manager (noscript)-->
+  
+      <header class="vlabs-header sticky-top bg-white">
+        <nav class="p-0 navbar navbar-light d-flex align-items-stretch">
+          
+          <button class="navbar-toggler px-4" type="button" onclick="toggle()">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+      
+          <div class="d-flex justify-content-center">        
+            <a href="https://vlab.co.in" class="navbar-brand">
+              <img src="./assets/images/vlabs-color-small-moe.jpg" alt="vlabs logo" class="vlabs-logo">
+            </a>
+          </div>
+          
+          <div id="headerNavbar" class="d-none border-top flex-grow-1 d-lg-flex align-items-center justify-content-end">
+            <div class="svc-rating-display">
+                <rating-display spreadsheetid="1x12nhpp0QvnsA6x-O1sV4IA9SAbfVsq_wiexWkutOmU" sheetname="Experiment-Database" columnname="Experiment Short Name" columnvalue="core-network-functions" imagesdirectory="/plugins/svc-rating/images/">
+                </rating-display>
+            </div>      <div class="svc-rating-submit">
+                <rating-submit title="Rate" this="" experiment="">
+                </rating-submit>
+            </div>      <bug-report id="bug-report" title="[BUG REPORT] IMPLEMENTATION OF CORE NETWORK (CN) FUNCTION (NFV)" page-type="text" context-info="{&quot;organisation&quot;:&quot;Virtual Labs&quot;,&quot;developer_institute&quot;:&quot;DLBG&quot;,&quot;expname&quot;:&quot;IMPLEMENTATION OF CORE NETWORK (CN) FUNCTION (NFV)&quot;,&quot;labname&quot;:&quot;Virtual Lab&quot;,&quot;phase&quot;:&quot;Testing&quot;}" checkbox-json="{&quot;text&quot;:[&quot;Insufficient Content&quot;],&quot;video&quot;:[&quot;Insufficient Content&quot;],&quot;assesment&quot;:[&quot;Incorrect Options&quot;,&quot;Incorrect Answer&quot;,&quot;Incorrect Question&quot;],&quot;assessment&quot;:[&quot;Incorrect Options&quot;,&quot;Incorrect Answer&quot;,&quot;Incorrect Question&quot;],&quot;simulation&quot;:[&quot;Simulation Not Working&quot;,&quot;Incorrect Results/Observations&quot;,&quot;Insufficient/Incorrect Instructions&quot;],&quot;DEFAULT&quot;:[&quot;Page Not Loading&quot;,&quot;Content Not Visible&quot;,&quot;Incorrect Content&quot;]}" button_style="border: none; color: #fff; background-color: #288ec8; text-align: center; font-size: 1.05rem; border-radius: 1em;padding: 0.6em 1.2em; margin: 0 10px" position="override" custom_button_class="v-button"></bug-report>
+          </div>
+        </nav>
+      </header>
+      <div class="container-fluid flex-fill d-flex flex-column vlabs-page-main">
+        <div class="row d-flex justify-content-between">
+          <div class="flex-column">
+          <div class="row py-4 px-4 breadcrumbs">
+          	<div class="title is-4 tools">Tools</div>
+          	<span class="mx-2">
+          		<i aria-hidden="true" class="fa fa-angle-right"></i>
+          	</span>
+          	<a href="performance-report.html" class="my-2 mx-3" target="_blank">
+          		<button class="v-button">Performance Tool</button>
+          	</a>
+          	<a href="validator-report.html" class="my-2 mx-3" target="_blank">
+          		<button class="v-button">Validation Tool</button>
+          	</a>
+          </div>
+          </div>
+        </div>
+        <div class="row flex-grow-1 d-flex flex-nowrap flex-column flex-lg-row">
+          <div class="modal fade popupmenu" id="popupMenu" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">
+                              <a href="https://vlab.co.in" class="navbar-brand">
+                                  <img src="./assets/images/vlabs-color-small-moe.jpg" alt="vlabs logo" class="vlabs-logo">
+                              </a>
+                          </h5>
+                          <button type="button" class="btn-close align-self-center" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body nav-menu">
+                              <div>
+                                  <div class="d-flex nav-menu-body">
+                                      <a href="index.html" class="p-2 ">
+                                      Aim
+                                      </a>
+                                      
+                                  </div>
+                                  <div id="t-" class="collapse">
+                                      <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                                      </div>
+                                  </div>
+                              </div>
+                              <div>
+                                  <div class="d-flex nav-menu-body">
+                                      <a href="theory.html" class="p-2  current-item ">
+                                      Theory
+                                      </a>
+                                      
+                                  </div>
+                                  <div id="t-" class="collapse">
+                                      <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                                      </div>
+                                  </div>
+                              </div>
+                              <div>
+                                  <div class="d-flex nav-menu-body">
+                                      <a href="pretest.html" class="p-2 ">
+                                      Pretest
+                                      </a>
+                                      
+                                  </div>
+                                  <div id="t-" class="collapse">
+                                      <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                                      </div>
+                                  </div>
+                              </div>
+                              <div>
+                                  <div class="d-flex nav-menu-body">
+                                      <a href="procedure.html" class="p-2 ">
+                                      Procedure
+                                      </a>
+                                      
+                                  </div>
+                                  <div id="t-" class="collapse">
+                                      <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                                      </div>
+                                  </div>
+                              </div>
+                              <div>
+                                  <div class="d-flex nav-menu-body">
+                                      <a href="simulation.html" class="p-2 ">
+                                      Simulation
+                                      </a>
+                                      
+                                  </div>
+                                  <div id="t-" class="collapse">
+                                      <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                                      </div>
+                                  </div>
+                              </div>
+                              <div>
+                                  <div class="d-flex nav-menu-body">
+                                      <a href="posttest.html" class="p-2 ">
+                                      Posttest
+                                      </a>
+                                      
+                                  </div>
+                                  <div id="t-" class="collapse">
+                                      <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                                      </div>
+                                  </div>
+                              </div>
+                              <div>
+                                  <div class="d-flex nav-menu-body">
+                                      <a href="references.html" class="p-2 ">
+                                      References
+                                      </a>
+                                      
+                                  </div>
+                                  <div id="t-" class="collapse">
+                                      <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                                      </div>
+                                  </div>
+                              </div>
+                              <div>
+                                  <div class="d-flex nav-menu-body">
+                                      <a href="contributors.html" class="p-2 ">
+                                      Contributors
+                                      </a>
+                                      
+                                  </div>
+                                  <div id="t-" class="collapse">
+                                      <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                                      </div>
+                                  </div>
+                              </div>
+                              <div>
+                                  <div class="d-flex nav-menu-body">
+                                      <a href="feedback.html" class="p-2 ">
+                                      Feedback
+                                      </a>
+                                      
+                                  </div>
+                                  <div id="t-" class="collapse">
+                                      <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                                      </div>
+                                  </div>
+                              </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="nav flex-column sidebar nav-menu flex-shrink-0 px-lg-4 align-items-center align-items-lg-start hidden d-none d-lg-flex" id="menu">
+                <div>
+                    <div class="d-flex nav-menu-body">
+                        <a href="index.html" class="p-2 ">
+                        Aim
+                        </a>
+                        
+                    </div>
+                    <div id="t-" class="collapse">
+                        <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex nav-menu-body">
+                        <a href="theory.html" class="p-2  current-item ">
+                        Theory
+                        </a>
+                        
+                    </div>
+                    <div id="t-" class="collapse">
+                        <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex nav-menu-body">
+                        <a href="pretest.html" class="p-2 ">
+                        Pretest
+                        </a>
+                        
+                    </div>
+                    <div id="t-" class="collapse">
+                        <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex nav-menu-body">
+                        <a href="procedure.html" class="p-2 ">
+                        Procedure
+                        </a>
+                        
+                    </div>
+                    <div id="t-" class="collapse">
+                        <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex nav-menu-body">
+                        <a href="simulation.html" class="p-2 ">
+                        Simulation
+                        </a>
+                        
+                    </div>
+                    <div id="t-" class="collapse">
+                        <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex nav-menu-body">
+                        <a href="posttest.html" class="p-2 ">
+                        Posttest
+                        </a>
+                        
+                    </div>
+                    <div id="t-" class="collapse">
+                        <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex nav-menu-body">
+                        <a href="references.html" class="p-2 ">
+                        References
+                        </a>
+                        
+                    </div>
+                    <div id="t-" class="collapse">
+                        <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex nav-menu-body">
+                        <a href="contributors.html" class="p-2 ">
+                        Contributors
+                        </a>
+                        
+                    </div>
+                    <div id="t-" class="collapse">
+                        <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex nav-menu-body">
+                        <a href="feedback.html" class="p-2 ">
+                        Feedback
+                        </a>
+                        
+                    </div>
+                    <div id="t-" class="collapse">
+                        <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                        </div>
+                    </div>
+                </div>
+          </div>          <div class="vlabs-page-content px-5 pb-4 flex-grow-1 markdown-body">
+            <div class="text-center fix-spacing">
+              <h2 id="implementation-of-core-network-cn-function-nfv">Implementation of Core Network (CN) Function (NFV)</h2>
+          
+            </div>
+              <h2 id="1-introduction-to-5g-core-network-architecture">1. Introduction to 5G Core Network Architecture</h2>
+          <p>The 5G core network implements a Service-Based Architecture (SBA) that represents a paradigm shift from traditional monolithic architectures. Unlike its 4G predecessor, 5G adopts a modular, microservice-based design where network functions operate independently and can be scaled according to demand.</p>
+          <p>The core network architecture is strategically divided into two distinct planes:</p>
+          <ol type="a">
+          <li><b>Control Plane</b>: Responsible for signaling, session management, and policy enforcement</li>
+          <li><b>User Plane</b>: Handles actual data packet forwarding and routing</li>
+          </ol>
+          
+          <p>This architectural separation, known as Control and User Plane Separation (CUPS), enables flexible deployment strategies and optimized resource utilization. As illustrated in <strong>Figure 1</strong>, the Service-Based Architecture highlights the separation of the Control Plane—consisting of interconnected network functions such as the AMF, SMF, and PCF—and the User Plane, which routes the actual data traffic through the UPF.</p>
+          <div align="center">
+            <img src="images/fig-1.svg" alt="5G Core Network Service-Based Architecture" width="40%">
+            <p><i>Figure 1: 5G Core Network Service-Based Architecture</i></p>
+          </div>
+          
+          <h2 id="2-containerization-and-orchestration">2. Containerization and Orchestration</h2>
+          <p>Containerization and orchestration technologies provide the foundational infrastructure for deploying and managing 5G core network functions in production environments. These technologies enable scalable, resilient, and efficient network function deployment.</p>
+          <h3 id="21-docker-container-platform">2.1 Docker: Container Platform</h3>
+          <p>Docker has revolutionized application deployment by introducing lightweight, portable containers that package applications with all their dependencies. In 5G Core deployment, Docker provides several critical advantages.</p>
+          <ol type="a">
+            <li><b>Container Images</b>: Read-only templates containing application code, runtime, libraries, and configuration files.</li>
+            <li><b>Containers</b>: Running instances of Docker images, providing isolated environments for network functions.</li>
+            <li><b>Docker Engine</b>: Runtime that creates and manages containers on the host operating system.</li>
+            <li><b>Docker Registry</b>: Repository for storing and distributing container images.</li>
+          </ol>
+          
+          <h4>Benefits for 5G Core Deployment:</h4>
+          <ol type="a">
+            <li><b>Isolation</b>: Each network function runs in its own container</li>
+            <li><b>Portability</b>: Consistent execution across environments</li>
+            <li><b>Resource Efficiency</b>: Shared host OS kernel</li>
+            <li><b>Rapid Deployment</b>: Quick instantiation and scaling</li>
+            <li><b>Version Control</b>: Support for multiple versions</li>
+          </ol>
+          
+          <h3 id="22-kubernetes-container-orchestration">2.2 Kubernetes: Container Orchestration</h3>
+          <p>
+          While Docker manages individual containers, Kubernetes orchestrates containerized applications across machine clusters, providing enterprise-level automation and reliability for production-grade 5G Core deployments.
+          </p>
+          
+          <h4>Core Kubernetes Concepts:</h4>
+          <ol type="a">
+            <li><b>Pods</b>: Smallest deployable units containing network function containers</li>
+            <li><b>Services</b>: Stable network endpoints and load balancing</li>
+            <li><b>Deployments</b>: Declarative application state definitions</li>
+            <li><b>ConfigMaps and Secrets</b>: Configuration and sensitive data management</li>
+            <li><b>Namespaces</b>: Virtual cluster separation</li>
+            <li><b>Ingress Controllers</b>: External access management</li>
+          </ol>
+          
+          <h4>Kubernetes Architecture Components:</h4>
+          
+          <ul>
+          <li><p><strong>Master Node (Control Plane):</strong></p>
+          <ol type="i">
+          <li>API Server: Central management point</li>
+          <li>Scheduler: Pod assignment</li>
+          <li>Controller Manager: Cluster state maintenance</li>
+          <li>etcd: Configuration store</li>
+          </ol></li>
+          <li><p><strong>Worker Nodes:</strong></p>
+          <ol type="i">
+          <li>Kubelet: Pod management agent</li>
+          <li>Container Runtime: Container execution</li>
+          <li>Kube-proxy: Network rules management</li>
+          </ol></li>
+          </ul>
+          <h3 id="23-open-source-5g-core-implementations-oai-and-open5gs">2.3 Open-Source 5G Core Implementations: OAI and Open5GS</h3>
+          <p>Beyond the underlying container and orchestration layer, open-source software stacks provide ready-to-deploy implementations of the 5G core network functions described in this document. Two of the most widely adopted projects for research, testbeds, and proof-of-concept deployments are OpenAirInterface (OAI) and Open5GS.</p>
+          <h4> 2.3.1 OpenAirInterface </h4>
+           
+          <p>OpenAirInterface is an open-source project maintained by the OpenAirInterface Software Alliance, providing a full software-based implementation of both the radio access network (RAN) and the 5G core network functions.</p>
+          <ol type="a">
+            <li><b>OAI-CN5G</b>: A cloud-native implementation of the 5G core, with each network function (AMF, SMF, UPF, AUSF, UDM, PCF, NRF, etc.) packaged as an independent Docker container, aligned with the Service-Based Architecture described in Section 1.</li>
+            <li><b>OAI-RAN</b>: Software implementation of gNB and UE functionality, enabling end-to-end 5G testbeds using software-defined radios.</li>
+            <li><b>Standards Alignment</b>: Closely tracks 3GPP Release specifications, making it a common reference platform for 5G research and standardization work.</li>
+            <li><b>Kubernetes Support</b>: Official Helm charts allow OAI-CN5G network functions to be deployed and orchestrated on Kubernetes clusters, as described in Section 2.2.</li>
+          </ol>
+           
+          <h4> 2.3.2 Open5GS </h4>
+           
+          <p>Open5GS is an open-source project implementing both 4G EPC and 5G core network functions in C, designed for lightweight deployment and ease of integration.</p>
+          <ol type="a">
+            <li><b>Modular NF Implementation</b>: Provides independent binaries/containers for AMF, SMF, UPF, AUSF, UDM, UDR, PCF, NRF, and NSSF, mirroring the modular design principles outlined in Section 1.</li>
+            <li><b>Deployment Flexibility</b>: Can be run as native Linux processes, Docker containers, or via Helm charts on Kubernetes, supporting the same containerization workflow described in Section 2.1–2.2.</li>
+            <li><b>WebUI and Subscriber Management</b>: Includes a MongoDB-backed WebUI for provisioning subscriber data, commonly used alongside UDM/UDR for testbed configuration.</li>
+            <li><b>Interoperability</b>: Frequently paired with third-party RAN simulators (e.g., UERANSIM) or OAI-RAN for end-to-end testing, since it implements standard 3GPP N1–N4 interfaces.</li>
+          </ol>
+          
+           
+          <h4> 2.3.3 OAI vs. Open5GS: Practical Comparison </h4>
+           
+          <ol type="a">
+            <li><b>Primary Use Case</b>: OAI is favored for combined RAN+Core research and standards-compliant experimentation; Open5GS is favored for lightweight, quick-to-deploy core-only testbeds.</li>
+            <li><b>Language/Footprint</b>: Open5GS (C) is generally lighter-weight; OAI-CN5G (C/C++) offers deeper RAN integration at the cost of higher setup complexity.</li>
+            <li><b>Community and Tooling</b>: Both maintain active Kubernetes/Helm deployment support, making either suitable for the containerized architecture discussed in Section 2.</li>
+          </ol>
+          
+          <h2 id="3-network-function-roles-and-responsibilities">3. Network Function Roles and Responsibilities</h2>
+          <p>The 5G core network comprises multiple specialized network functions that work in coordination to provide seamless mobile connectivity, session management, authentication, and policy enforcement. Each function has specific roles and responsibilities within the overall architecture.</p>
+          <h3 id="31-access-and-mobility-management-function-amf">3.1 Access and Mobility Management Function (AMF)</h3>
+          <p><strong>Role</strong>: Primary control plane gateway for user equipment (UE)</p>
+          <h4>Key Responsibilities:</h4>
+          <ol type="a">
+            <li><b>Registration Management</b>: Handles UE registration and deregistration procedures</li>
+            <li><b>Connection Management</b>: Manages signaling connections between UE and core network</li>
+            <li><b>Mobility Management</b>: Tracks UE location and manages mobility events</li>
+            <li><b>Authentication Coordination</b>: Works with AUSF to authenticate UE during initial access</li>
+            <li><b>Network Slice Selection</b>: Selects appropriate network slice for UE based on subscription</li>
+            <li><b>SMF Selection</b>: Chooses suitable SMF for PDU session establishment</li>
+            <li><b>Paging Management</b>: Triggers paging when downlink data arrives for idle UEs</li>
+          </ol>
+          
+          <h4>Key Interfaces:</h4>
+          <ol type="a">
+            <li><b>N1</b>: Communication with UE (NAS signaling)</li>
+            <li><b>N2</b>: Communication with RAN (NGAP protocol)</li>
+            <li><b>N11</b>: Communication with SMF for session management</li>
+            <li><b>N12</b>: Communication with AUSF for authentication</li>
+            <li><b>N15</b>: Communication with PCF for policy decisions</li>
+          </ol>
+          
+          <p>As depicted in <strong>Figure 2</strong>, the AMF acts as the central control point for access network connections. It communicates directly with the User Equipment (UE) via the N1 interface, the Radio Access Network (RAN) via the N2 interface, and coordinates with other core network functions—including the SMF, AUSF, and PCF—for comprehensive connection and mobility management.</p>
+          <div align="center">
+            <img src="images/fig-2.svg" alt="AMF Functions and Interface Connections" width="40%">
+            <p><i>Figure 2: AMF Functions and Interface Connections</i></p>
+          </div>
+          
+          <h3>3.2 Session Management Function (SMF)</h3>
+          <p><b>Role</b>: Orchestrates all PDU (Protocol Data Unit) session operations</p>
+          
+          <h4>Key Responsibilities:</h4>
+          <ol type="a">
+            <li><b>Session Management</b>:
+              <ol type="i">
+                <li>Establishment of new PDU sessions</li>
+                <li>Modification of session parameters</li>
+                <li>Termination of inactive sessions</li>
+              </ol>
+            </li>
+            <li><b>IP Address Allocation</b>: Assigns IP addresses to UE for data sessions</li>
+            <li><b>UPF Selection and Control</b>: Selects appropriate UPF and configures packet forwarding rules</li>
+            <li><b>QoS Management</b>: Applies Quality of Service policies to data flows</li>
+            <li><b>Charging Data Collection</b>: Gathers usage information for billing purposes</li>
+          </ol>
+          
+          <h4>Key Interfaces:</h4>
+          <ol type="a">
+            <li><b>N4</b>: Communication with UPF (PFCP protocol) for session configuration</li>
+            <li><b>N7</b>: Communication with PCF for policy rules</li>
+            <li><b>N10</b>: Communication with UDM for subscription data</li>
+            <li><b>N11</b>: Communication with AMF for session signaling</li>
+          </ol>
+          
+          <p><strong>Figure 3</strong> outlines the SMF and its interconnections within the 5G core. It highlights the SMF's central role in managing user sessions by interacting with the AMF for control signaling, querying the UDM for subscription data, applying policy rules from the PCF, and instructing the UPF via the N4 interface to manage user plane data forwarding rules.</p>
+          <div align="center">
+            <img src="images/fig-3.svg" alt="SMF Functions and Interface Connections" width="40%">
+            <p><i>Figure 3: SMF Functions and Interface Connections</i></p>
+          </div>
+          
+          <h3>3.3 User Plane Function (UPF)</h3>
+          <p><b>Role</b>: Handles all user data packet processing and forwarding</p>
+          
+          <h4>Key Responsibilities:</h4>
+          <ol type="a">
+            <li><b>Packet Operations</b>:
+              <ol type="i">
+                <li>Routing between RAN and external networks</li>
+                <li>Forwarding based on SMF rules</li>
+                <li>Deep packet inspection for policy enforcement</li>
+              </ol>
+            </li>
+            <li><b>QoS Enforcement</b>: Applies traffic shaping and prioritization rules</li>
+            <li><b>Packet Buffering</b>: Buffers downlink packets for UEs in idle mode</li>
+            <li><b>Traffic Measurement</b>: Collects traffic statistics for reporting</li>
+            <li><b>Lawful Interception</b>: Supports legal data interception when required</li>
+          </ol>
+          
+          <h4>Key Interfaces:</h4>
+          <ol type="a">
+            <li><b>N3</b>: Communication with RAN (GTP-U protocol) for user data</li>
+            <li><b>N4</b>: Communication with SMF (PFCP protocol) for configuration</li>
+            <li><b>N6</b>: Communication with Data Network (Internet/Enterprise networks)</li>
+            <li><b>N9</b>: Communication with other UPFs for distributed deployments</li>
+          </ol>
+          
+          <p>Visualized in <strong>Figure 4</strong>, the UPF serves as the essential bridge for data traffic. The figure illustrates how the UPF receives user data from the RAN via the N3 interface and routes it to the external Data Network (DN) via the N6 interface, all while operating under the control of the SMF through the N4 interface.</p>
+          <div align="center">
+            <img src="images/fig-4.svg" alt="UPF Data Plane Operations and Connections" width="40%">
+            <p><i>Figure 4: UPF Data Plane Operations and Connections</i></p>
+          </div>
+          
+          <h3>3.4 Authentication Server Function (AUSF)</h3>
+          <p><b>Role</b>: Performs authentication services for UE network access</p>
+          
+          <h4>Key Responsibilities:</h4>
+          <ol type="a">
+            <li><b>UE Authentication</b>: Validates UE credentials during registration</li>
+            <li><b>Authentication Method Support</b>: Supports 5G-AKA and EAP-AKA protocols</li>
+            <li><b>Security Key Generation</b>: Creates encryption and integrity protection keys</li>
+            <li><b>Authentication Vector Management</b>: Retrieves and processes authentication data from UDM</li>
+            <li><b>Re-authentication</b>: Triggers periodic authentication when security context expires</li>
+          </ol>
+          
+          <h4>Key Interfaces:</h4>
+          <ol type="a">
+            <li><b>N12</b>: Communication with AMF for authentication requests</li>
+            <li><b>N13</b>: Communication with UDM for authentication credentials</li>
+          </ol>
+          
+          <p>As demonstrated in <strong>Figure 5</strong>, the AUSF plays a critical role in network security by mediating between the AMF and the UDM. This process ensures secure authentication of the User Equipment (UE), guaranteeing that only authorized users can access network services.</p>
+          <div align="center">
+            <img src="images/fig-5.svg" alt="AUSF Authentication Process and Connections" width="40%">
+            <p><i>Figure 5: AUSF Authentication Process and Connections</i></p>
+          </div>
+          
+          <h3>3.5 Unified Data Management (UDM)</h3>
+          <p><b>Role</b>: Central repository for subscriber data and credentials</p>
+          
+          <h4>Key Responsibilities:</h4>
+          <ol type="a">
+            <li><b>Subscription Management</b>:
+              <ol type="i">
+                <li>Stores and provides subscriber profile information</li>
+                <li>Maintains authentication keys and vectors</li>
+              </ol>
+            </li>
+            <li><b>UE Registration</b>: Tracks UE registration status across the network</li>
+            <li><b>Access Authorization</b>: Validates UE access rights and restrictions</li>
+            <li><b>Subscription Data Provisioning</b>: Delivers subscription data to requesting network functions</li>
+          </ol>
+          
+          <h4>Key Interfaces:</h4>
+          <ol type="a">
+            <li><b>N8</b>: Communication with AMF for registration and subscription data</li>
+            <li><b>N10</b>: Communication with SMF for session-related subscription data</li>
+            <li><b>N13</b>: Communication with AUSF for authentication credentials</li>
+            <li><b>N35</b>: Communication with UDR for data storage</li>
+          </ol>
+          
+          <p><strong>Figure 6</strong> illustrates the UDM acting as the centralized database for subscriber information. Various control plane functions—such as the AMF, SMF, and AUSF—are shown querying the UDM to retrieve the essential subscription, authentication, and policy data required for their respective operations.</p>
+          <div align="center">
+            <img src="images/fig-6.svg" alt="UDM Data Management and Connections" width="40%">
+            <p><i>Figure 6: UDM Data Management and Connections</i></p>
+          </div>
+          
+          <h3>3.6 Policy Control Function (PCF)</h3>
+          <p><b>Role</b>: Provides unified policy framework for network behavior</p>
+          
+          <h4>Key Responsibilities:</h4>
+          <ol type="a">
+            <li><b>Policy Management</b>:
+              <ol type="i">
+                <li>Defines and enforces network policies</li>
+                <li>Determines QoS parameters for sessions</li>
+                <li>Applies charging policies for billing</li>
+              </ol>
+            </li>
+            <li><b>Policy Provisioning</b>:
+              <ol type="i">
+                <li>Session-specific rules to SMF</li>
+                <li>Access and mobility policies to AMF</li>
+                <li>Network slice policies</li>
+              </ol>
+            </li>
+          </ol>
+          
+          <h4>Key Interfaces:</h4>
+          <ol type="a">
+            <li><b>N5</b>: Communication with Application Functions for app-specific policies</li>
+            <li><b>N7</b>: Communication with SMF for session policies</li>
+            <li><b>N15</b>: Communication with AMF for access and mobility policies</li>
+            <li><b>N36</b>: Communication with UDM for policy-related subscription data</li>
+          </ol>
+          
+          <p>As shown in <strong>Figure 7</strong>, the PCF orchestrates network rules and quality of service parameters. The diagram highlights how the PCF provides critical policy decisions to the AMF for access and mobility control, and to the SMF for session management and traffic policing.</p>
+          <div align="center">
+            <img src="images/fig-7.svg" alt="PCF Policy Framework and Connections" width="40%">
+            <p><i>Figure 7: PCF Policy Framework and Connections</i></p>
+          </div>
+          
+          <h3>3.7 Network Repository Function (NRF)</h3>
+          <p><b>Role</b>: Service discovery and registration for network functions</p>
+          
+          <h4>Key Responsibilities:</h4>
+          <ol type="a">
+            <li><b>Network Function Registry</b>: Maintains registry of available network functions</li>
+            <li><b>Service Discovery</b>: Enables network functions to discover each other</li>
+            <li><b>Profile Management</b>: Stores capability and status information</li>
+            <li><b>Selection Support</b>: Helps select appropriate instances based on criteria</li>
+            <li><b>Authorization</b>: Validates access tokens for service-based communication</li>
+          </ol>
+          
+          <p><strong>Figure 8</strong> demonstrates the NRF acting as a central service discovery directory for the 5G core. It outlines the process where various network functions register their profiles with the NRF and subsequently query it to discover and securely communicate with other required services within the Service-Based Architecture.</p>
+          <div align="center">
+            <img src="images/fig-8.svg" alt="NRF Service Discovery Architecture" width="40%">
+            <p><i>Figure 8: NRF Service Discovery Architecture</i></p>
+          </div>
+          
+          <h2 id="4-network-function-interconnections">4 Network Function Interconnections</h2>
+          <p>All network functions collaborate through standardized interfaces to provide seamless mobile connectivity. The control plane functions (AMF, SMF, AUSF, UDM, PCF, NRF) manage signaling and policies, while the user plane function (UPF) handles actual data traffic. This modular architecture enables flexible deployment, independent scaling, and efficient resource utilization.</p>
+          <p>A holistic view of these interconnections is provided in <strong>Figure 9</strong>, which summarizes all the previously discussed network functions and their standardized interfaces. This complete interconnection map visually reinforces the distinct separation between the interconnected control plane services and the user plane data path.</p>
+          <div align="center">
+            <img src="images/fig-9.svg" alt="Complete 5G Core Network Function Interconnection Map" width="40%">
+            <p><i>Figure 9: Complete 5G Core Network Function Interconnection Map</i></p>
+          </div>
+          
+          </div>
+          <div class="bug-report-mobile">
+              <bug-report id="bug-report" title="[BUG REPORT] IMPLEMENTATION OF CORE NETWORK (CN) FUNCTION (NFV)" page-type="text" context-info="{&quot;organisation&quot;:&quot;Virtual Labs&quot;,&quot;developer_institute&quot;:&quot;DLBG&quot;,&quot;expname&quot;:&quot;IMPLEMENTATION OF CORE NETWORK (CN) FUNCTION (NFV)&quot;,&quot;labname&quot;:&quot;Virtual Lab&quot;,&quot;phase&quot;:&quot;Testing&quot;}" checkbox-json="{&quot;text&quot;:[&quot;Insufficient Content&quot;],&quot;video&quot;:[&quot;Insufficient Content&quot;],&quot;assesment&quot;:[&quot;Incorrect Options&quot;,&quot;Incorrect Answer&quot;,&quot;Incorrect Question&quot;],&quot;assessment&quot;:[&quot;Incorrect Options&quot;,&quot;Incorrect Answer&quot;,&quot;Incorrect Question&quot;],&quot;simulation&quot;:[&quot;Simulation Not Working&quot;,&quot;Incorrect Results/Observations&quot;,&quot;Insufficient/Incorrect Instructions&quot;],&quot;DEFAULT&quot;:[&quot;Page Not Loading&quot;,&quot;Content Not Visible&quot;,&quot;Incorrect Content&quot;]}" position="override" button_style="
+                          position: fixed; 
+                          bottom: 20px;
+                          right: 20px;
+                          z-index: 1;
+                          font-size: 0;
+                          padding: 25px;
+                          border-radius: 50%;
+                          border: none;
+                          background-color: #0fc0ff;
+                          background-image: url(data:image/png;base64,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);
+                          background-repeat: no-repeat;
+                          background-position: center;
+                          background-size: 30px;
+                          filter: invert(1);">
+              </bug-report>
+          </div>        </div>
+      </div>
+      <footer class="text-light pt-2 vlabs-footer d-flex flex-column">
+        <div class="row px-5 mx-0">
+          <div class="col d-flex flex-column">
+            <span class="font-weight-bold vlabs-footer-sect-name pb-2 mb-3">Community Links</span>
+            <a href="https://www.sakshat.ac.in/" class="text-light">Sakshat Portal</a>
+            <a href="http://outreach.vlabs.ac.in/" class="text-light">Outreach Portal</a>
+            <a href="https://vlab.co.in/faq" class="text-light">FAQ: Virtual Labs</a>
+          </div>
+          <div class="col d-flex flex-column">
+            <span class="font-weight-bold vlabs-footer-sect-name pb-2 mb-3">Contact Us</span>
+            <span> Phone: General Information: 011-26582050 </span>
+            <span> Email: support@vlabs.ac.in </span>
+          </div>
+          <div class="col d-flex flex-column">
+            <span class="font-weight-bold vlabs-footer-sect-name pb-2 mb-3">Follow Us</span>
+            <div class="social-links">
+      	<a class="p-2 mt-1 mr-2 d-inline-flex justify-content-center align-items-center" style="background: #55acee;" href="https://twitter.com/TheVirtualLabs">
+      	  <i class="fab fa-twitter"></i>
+      	</a>
+      	<a class="p-2 mt-1 mr-2 d-inline-flex justify-content-center align-items-center" style="background: #3b5998;" href="https://www.facebook.com/Virtual-Labs-IIT-Delhi-301510159983871/">
+      	  <i class="fab fa-facebook"></i>
+      	</a>
+      	<a class="p-2 mt-1 mr-2 d-inline-flex justify-content-center align-items-center" style="background: #e52d27;" href="https://www.youtube.com/watch?v=asxRaOgk6a0">
+      	  <i class="fab fa-youtube"></i>
+      	</a>
+      	<a class="p-2 mt-1 mr-2 d-inline-flex justify-content-center align-items-center" style="background: #2867B2;" href="https://in.linkedin.com/in/virtual-labs-008ba9136">
+      	  <i class="fab fa-linkedin"></i>
+      	</a>
+            </div>
+          </div>
+        </div>
+        <div class="m-0 py-2 text-center" style="font-family: &quot;Open Sans&quot;, sans-serif; background: #212121;">
+          <a class="text-primary font-weight-bold" href="https://www.gnu.org/licenses/agpl-3.0.en.html"> AGPL 3.0 </a>
+          &nbsp;&amp;&nbsp;
+          <a class="text-primary font-weight-bold" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"> Creative Commons (CC BY-NC-SA 4.0) </a>
+        </div>
+      </footer>
+    <script src="./assets/js/toggleSidebar.js"></script>
+    <script src="./assets/js/event-handler.js"></script>
+
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register("sw.js");
+        });
+      }
+    </script>
+  
+
+<script type="module" src="https://cdn.vlabs.ac.in/bug-report/vlabs-bug-report.js"></script><script type="module" src="/exp-core-network-functions-dei/plugins/svc-rating/index.js"></script><script type="module" src="/exp-core-network-functions-dei/plugins/svc-rating/config.js"></script><script type="module" src="https://apis.google.com/js/api.js"></script></body></html>
