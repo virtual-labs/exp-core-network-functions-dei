@@ -9,13 +9,12 @@ The core network architecture is strategically divided into two distinct planes:
 <li><b>User Plane</b>: Handles actual data packet forwarding and routing</li>
 </ol>
 
-This architectural separation, known as Control and User Plane Separation (CUPS), enables flexible deployment strategies and optimized resource utilization.
+This architectural separation, known as Control and User Plane Separation (CUPS), enables flexible deployment strategies and optimized resource utilization. As illustrated in **Figure 1**, the Service-Based Architecture highlights the separation of the Control Plane—consisting of interconnected network functions such as the AMF, SMF, and PCF—and the User Plane, which routes the actual data traffic through the UPF.
 
-<img src="images/fig-1.svg" alt="5G Core Network Service-Based Architecture" width="40%">
-
-*Fig: 5G Core Network Service-Based Architecture*
-
-This figure illustrates the Service-Based Architecture of the 5G Core Network, highlighting the separation of the Control Plane, which consists of various interconnected network functions (like AMF, SMF, PCF), and the User Plane, which handles the actual data traffic through the UPF.
+<div align="center">
+  <img src="images/fig-1.svg" alt="5G Core Network Service-Based Architecture" width="40%">
+  <p><i>Figure 1: 5G Core Network Service-Based Architecture</i></p>
+</div>
 
 ## 2. Containerization and Orchestration
 
@@ -136,10 +135,12 @@ The 5G core network comprises multiple specialized network functions that work i
   <li><b>N15</b>: Communication with PCF for policy decisions</li>
 </ol>
 
-<img src="images/fig-2.svg" alt="AMF Functions and Interface Connections" width="40%">
-<p><i>Fig: AMF Functions and Interface Connections</i></p>
+As depicted in **Figure 2**, the AMF acts as the central control point for access network connections. It communicates directly with the User Equipment (UE) via the N1 interface, the Radio Access Network (RAN) via the N2 interface, and coordinates with other core network functions—including the SMF, AUSF, and PCF—for comprehensive connection and mobility management.
 
-<p>This diagram depicts the Access and Mobility Management Function (AMF) and its primary interfaces. It shows how the AMF acts as the central control point for access network connections, communicating with the User Equipment (UE) via the N1 interface, the Radio Access Network (RAN) via the N2 interface, and other core network functions like the SMF, AUSF, and PCF for comprehensive connection and mobility management.</p>
+<div align="center">
+  <img src="images/fig-2.svg" alt="AMF Functions and Interface Connections" width="40%">
+  <p><i>Figure 2: AMF Functions and Interface Connections</i></p>
+</div>
 
 <h3>3.2 Session Management Function (SMF)</h3>
 <p><b>Role</b>: Orchestrates all PDU (Protocol Data Unit) session operations</p>
@@ -167,10 +168,12 @@ The 5G core network comprises multiple specialized network functions that work i
   <li><b>N11</b>: Communication with AMF for session signaling</li>
 </ol>
 
-<img src="images/fig-3.svg" width="40%">
-<p><i>Fig: SMF Functions and Interface Connections</i></p>
+**Figure 3** outlines the SMF and its interconnections within the 5G core. It highlights the SMF's central role in managing user sessions by interacting with the AMF for control signaling, querying the UDM for subscription data, applying policy rules from the PCF, and instructing the UPF via the N4 interface to manage user plane data forwarding rules.
 
-<p>This figure outlines the Session Management Function (SMF) and its interconnections within the 5G core. It illustrates the SMF's role in managing user sessions by interacting with the AMF for control signaling, the UDM for subscription data, the PCF for policy enforcement, and the UPF via the N4 interface to control user plane data forwarding rules.</p>
+<div align="center">
+  <img src="images/fig-3.svg" alt="SMF Functions and Interface Connections" width="40%">
+  <p><i>Figure 3: SMF Functions and Interface Connections</i></p>
+</div>
 
 <h3>3.3 User Plane Function (UPF)</h3>
 <p><b>Role</b>: Handles all user data packet processing and forwarding</p>
@@ -198,10 +201,12 @@ The 5G core network comprises multiple specialized network functions that work i
   <li><b>N9</b>: Communication with other UPFs for distributed deployments</li>
 </ol>
 
-<img src="images/fig-4.svg" width="40%">
-<p><i>Fig: UPF Data Plane Operations and Connections</i></p>
+Visualized in **Figure 4**, the UPF serves as the essential bridge for data traffic. The figure illustrates how the UPF receives user data from the RAN via the N3 interface and routes it to the external Data Network (DN) via the N6 interface, all while operating under the control of the SMF through the N4 interface.
 
-<p>This diagram visualizes the User Plane Function (UPF) as the essential bridge for data traffic. It highlights the UPF's connections, receiving user data from the RAN via the N3 interface and routing it to the external Data Network (DN) via the N6 interface, all while being controlled by the SMF through the N4 interface.</p>
+<div align="center">
+  <img src="images/fig-4.svg" alt="UPF Data Plane Operations and Connections" width="40%">
+  <p><i>Figure 4: UPF Data Plane Operations and Connections</i></p>
+</div>
 
 <h3>3.4 Authentication Server Function (AUSF)</h3>
 <p><b>Role</b>: Performs authentication services for UE network access</p>
@@ -221,10 +226,12 @@ The 5G core network comprises multiple specialized network functions that work i
   <li><b>N13</b>: Communication with UDM for authentication credentials</li>
 </ol>
 
-<img src="images/fig-5.svg" width="40%">
-<p><i>Fig: AUSF Authentication Process and Connections</i></p>
+As demonstrated in **Figure 5**, the AUSF plays a critical role in network security by mediating between the AMF and the UDM. This process ensures secure authentication of the User Equipment (UE), guaranteeing that only authorized users can access network services.
 
-<p>This figure demonstrates the Authentication Server Function (AUSF) and its critical role in network security. It shows the AUSF mediating between the AMF and the UDM to securely authenticate the User Equipment (UE) and ensure that only authorized users can access the network services.</p>
+<div align="center">
+  <img src="images/fig-5.svg" alt="AUSF Authentication Process and Connections" width="40%">
+  <p><i>Figure 5: AUSF Authentication Process and Connections</i></p>
+</div>
 
 <h3>3.5 Unified Data Management (UDM)</h3>
 <p><b>Role</b>: Central repository for subscriber data and credentials</p>
@@ -250,10 +257,12 @@ The 5G core network comprises multiple specialized network functions that work i
   <li><b>N35</b>: Communication with UDR for data storage</li>
 </ol>
 
-<img src="images/fig-6.svg" width="40%">
-<p><i>Fig: UDM Data Management and Connections</i></p>
+**Figure 6** illustrates the UDM acting as the centralized database for subscriber information. Various control plane functions—such as the AMF, SMF, and AUSF—are shown querying the UDM to retrieve the essential subscription, authentication, and policy data required for their respective operations.
 
-<p>This diagram displays the Unified Data Management (UDM) function as the centralized database for subscriber information. It illustrates how various control plane functions, such as the AMF, SMF, and AUSF, query the UDM to retrieve essential subscription, authentication, and policy data required for their respective operations.</p>
+<div align="center">
+  <img src="images/fig-6.svg" alt="UDM Data Management and Connections" width="40%">
+  <p><i>Figure 6: UDM Data Management and Connections</i></p>
+</div>
 
 <h3>3.6 Policy Control Function (PCF)</h3>
 <p><b>Role</b>: Provides unified policy framework for network behavior</p>
@@ -284,10 +293,12 @@ The 5G core network comprises multiple specialized network functions that work i
   <li><b>N36</b>: Communication with UDM for policy-related subscription data</li>
 </ol>
 
-<img src="images/fig-7.svg" width="40%">
-<p><i>Fig: PCF Policy Framework and Connections</i></p>
+As shown in **Figure 7**, the PCF orchestrates network rules and quality of service parameters. The diagram highlights how the PCF provides critical policy decisions to the AMF for access and mobility control, and to the SMF for session management and traffic policing.
 
-<p>This figure illustrates the Policy Control Function (PCF) orchestrating network rules and quality of service parameters. It highlights the PCF providing policy decisions to the AMF for access and mobility control, and to the SMF for session management and traffic policing.</p>
+<div align="center">
+  <img src="images/fig-7.svg" alt="PCF Policy Framework and Connections" width="40%">
+  <p><i>Figure 7: PCF Policy Framework and Connections</i></p>
+</div>
 
 <h3>3.7 Network Repository Function (NRF)</h3>
 <p><b>Role</b>: Service discovery and registration for network functions</p>
@@ -301,18 +312,20 @@ The 5G core network comprises multiple specialized network functions that work i
   <li><b>Authorization</b>: Validates access tokens for service-based communication</li>
 </ol>
 
-<img src="images/fig-8.svg" alt="NRF Service Discovery Architecture" width="40%">
+**Figure 8** demonstrates the NRF acting as a central service discovery directory for the 5G core. It outlines the process where various network functions register their profiles with the NRF and subsequently query it to discover and securely communicate with other required services within the Service-Based Architecture.
 
-*Fig: NRF Service Discovery Architecture*
-
-This diagram shows the Network Repository Function (NRF) acting as a service discovery directory for the 5G core. It demonstrates how various network functions register their profiles with the NRF and subsequently query it to discover and communicate with other required services within the Service-Based Architecture.
+<div align="center">
+  <img src="images/fig-8.svg" alt="NRF Service Discovery Architecture" width="40%">
+  <p><i>Figure 8: NRF Service Discovery Architecture</i></p>
+</div>
 
 ## 4 Network Function Interconnections
 
 All network functions collaborate through standardized interfaces to provide seamless mobile connectivity. The control plane functions (AMF, SMF, AUSF, UDM, PCF, NRF) manage signaling and policies, while the user plane function (UPF) handles actual data traffic. This modular architecture enables flexible deployment, independent scaling, and efficient resource utilization.
 
-<img src="images/fig-9.svg" alt="Complete 5G Core Network Function Interconnection Map" width="40%">
+A holistic view of these interconnections is provided in **Figure 9**, which summarizes all the previously discussed network functions and their standardized interfaces. This complete interconnection map visually reinforces the distinct separation between the interconnected control plane services and the user plane data path.
 
-*Fig: Complete 5G Core Network Function Interconnection Map*
-
-This comprehensive diagram provides a holistic view of the 5G Core Network, summarizing all the previously discussed network functions and their standardized interfaces. It visually reinforces the distinction between the interconnected control plane services and the separated user plane data path.
+<div align="center">
+  <img src="images/fig-9.svg" alt="Complete 5G Core Network Function Interconnection Map" width="40%">
+  <p><i>Figure 9: Complete 5G Core Network Function Interconnection Map</i></p>
+</div>
