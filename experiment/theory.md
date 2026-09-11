@@ -1,3 +1,6 @@
+> **Audio Explanation:** For a comprehensive understanding of these theoretical concepts, you can listen on YouTube. 
+> [**Click here to listen the audio**](https://youtu.be/06MFzyeCcbg)
+
 ## 1. Introduction to 5G Core Network Architecture
 
 The 5G core network implements a Service-Based Architecture (SBA) that represents a paradigm shift from traditional monolithic architectures. Unlike its 4G predecessor, 5G adopts a modular, microservice-based design where network functions operate independently and can be scaled according to demand.
