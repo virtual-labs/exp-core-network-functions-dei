@@ -1,5 +1,7 @@
-> **Audio Explanation:** For a comprehensive understanding of these theoretical concepts, you can listen on YouTube. 
-> [**Click here to listen the audio**](https://youtu.be/06MFzyeCcbg)
+> **Audio Explanations:** For a more comprehensive understanding of these theoretical concepts, supplementary audio guides are available on YouTube.
+> 
+> - [**Listen in English**](https://youtu.be/BcwZ-lyCDGY)
+> - [**Listen in Hindi**](https://youtu.be/06MFzyeCcbg)
 
 ## 1. Introduction to 5G Core Network Architecture
 
@@ -23,58 +25,77 @@ This architectural separation, known as Control and User Plane Separation (CUPS)
 
 Containerization and orchestration technologies provide the foundational infrastructure for deploying and managing 5G core network functions in production environments. These technologies enable scalable, resilient, and efficient network function deployment.
 
-### 2.1 Docker: Container Platform
+## 2.1 Docker: Container Platform
 
-Docker has revolutionized application deployment by introducing lightweight, portable containers that package applications with all their dependencies. In 5G Core deployment, Docker provides several critical advantages.
+**Docker** is a container platform used to **build, package, distribute, and run applications in lightweight, isolated environments called containers**.
+
+A Docker container packages an application together with its required libraries, dependencies, runtime, and configuration. This helps ensure that the application runs consistently across different computers, servers, and cloud environments.
+
+In 5G Core deployment, Docker is particularly useful because each Network Function (NF) can run in its own isolated container.
+
+### Core Docker Concepts
 
 <ol type="a">
-  <li><b>Container Images</b>: Read-only templates containing application code, runtime, libraries, and configuration files.</li>
-  <li><b>Containers</b>: Running instances of Docker images, providing isolated environments for network functions.</li>
-  <li><b>Docker Engine</b>: Runtime that creates and manages containers on the host operating system.</li>
-  <li><b>Docker Registry</b>: Repository for storing and distributing container images.</li>
+  <li><b>Container Images</b>: Read-only templates containing application code, runtime, libraries, dependencies, and configuration files.</li>
+  <li><b>Containers</b>: Running instances of Docker images that provide isolated environments for applications or network functions.</li>
+  <li><b>Docker Engine</b>: The runtime responsible for creating, running, and managing containers on the host operating system.</li>
+  <li><b>Docker Registry</b>: A repository used to store, manage, and distribute Docker images.</li>
 </ol>
 
-<h4>Benefits for 5G Core Deployment:</h4>
+### Benefits of Docker for 5G Core Deployment
+
 <ol type="a">
-  <li><b>Isolation</b>: Each network function runs in its own container</li>
-  <li><b>Portability</b>: Consistent execution across environments</li>
-  <li><b>Resource Efficiency</b>: Shared host OS kernel</li>
-  <li><b>Rapid Deployment</b>: Quick instantiation and scaling</li>
-  <li><b>Version Control</b>: Support for multiple versions</li>
+  <li><b>Isolation</b>: Each Network Function can run in its own container.</li>
+  <li><b>Portability</b>: Containers provide consistent execution across different environments.</li>
+  <li><b>Resource Efficiency</b>: Containers share the host OS kernel and generally require fewer resources than virtual machines.</li>
+  <li><b>Rapid Deployment</b>: Network Functions can be started, stopped, and recreated quickly.</li>
+  <li><b>Version Control</b>: Different versions of Network Function images can be maintained and deployed as required.</li>
 </ol>
 
-### 2.2 Kubernetes: Container Orchestration
+---
 
-<p>
-While Docker manages individual containers, Kubernetes orchestrates containerized applications across machine clusters, providing enterprise-level automation and reliability for production-grade 5G Core deployments.
-</p>
+## 2.2 Kubernetes: Container Orchestration
 
-<h4>Core Kubernetes Concepts:</h4>
+**Kubernetes (K8s)** is an open-source platform for **automating the deployment, scaling, management, and networking of containerized applications**.
+
+While Docker is mainly used to build and run individual containers, Kubernetes is used to **orchestrate and manage containers across multiple machines in a cluster**. This makes it suitable for large-scale and production-grade 5G Core deployments.
+
+### Core Kubernetes Concepts
+
 <ol type="a">
-  <li><b>Pods</b>: Smallest deployable units containing network function containers</li>
-  <li><b>Services</b>: Stable network endpoints and load balancing</li>
-  <li><b>Deployments</b>: Declarative application state definitions</li>
-  <li><b>ConfigMaps and Secrets</b>: Configuration and sensitive data management</li>
-  <li><b>Namespaces</b>: Virtual cluster separation</li>
-  <li><b>Ingress Controllers</b>: External access management</li>
+  <li><b>Pods</b>: The smallest deployable units in Kubernetes. A Pod contains one or more containers and provides the execution environment for a Network Function.</li>
+  <li><b>Services</b>: Provide stable network endpoints and enable communication and load balancing between Pods.</li>
+  <li><b>Deployments</b>: Define the desired state of an application and manage the creation, updating, and replacement of Pods.</li>
+  <li><b>ConfigMaps and Secrets</b>: Used to manage configuration data and sensitive information such as passwords and credentials.</li>
+  <li><b>Namespaces</b>: Provide logical separation of resources within a Kubernetes cluster.</li>
+  <li><b>Ingress Controllers</b>: Manage external access to applications and services running inside the cluster.</li>
 </ol>
 
-<h4>Kubernetes Architecture Components:</h4>
+### Kubernetes Architecture Components
 
-- **Master Node (Control Plane):**
+#### Control Plane
+
 <ol type="i">
-  <li>API Server: Central management point</li>
-  <li>Scheduler: Pod assignment</li>
-  <li>Controller Manager: Cluster state maintenance</li>
-  <li>etcd: Configuration store</li>
+  <li><b>API Server</b>: The central interface through which Kubernetes components and users communicate with the cluster.</li>
+  <li><b>Scheduler</b>: Determines which Worker Node should run each Pod.</li>
+  <li><b>Controller Manager</b>: Monitors and maintains the desired state of cluster resources.</li>
+  <li><b>etcd</b>: Distributed key-value store that maintains Kubernetes cluster configuration and state.</li>
 </ol>
 
-- **Worker Nodes:**
+#### Worker Nodes
+
 <ol type="i">
-  <li>Kubelet: Pod management agent</li>
-  <li>Container Runtime: Container execution</li>
-  <li>Kube-proxy: Network rules management</li>
+  <li><b>Kubelet</b>: Agent running on each Worker Node that manages Pods and communicates with the Control Plane.</li>
+  <li><b>Container Runtime</b>: Software responsible for running containers.</li>
+  <li><b>Kube-proxy</b>: Manages network rules and enables communication between Kubernetes Services and Pods.</li>
 </ol>
+
+### Key Idea
+
+> **Docker provides the technology for packaging and running applications in containers, while Kubernetes provides the orchestration required to deploy, scale, network, and manage those containers across a cluster.**
+
+For 5G Core, Docker is commonly useful for **containerizing individual Network Functions**, while Kubernetes is useful for **managing those Network Functions at scale in a production environment**.
+
 
 ### 2.3 Open-Source 5G Core Implementations: OAI and Open5GS
  
