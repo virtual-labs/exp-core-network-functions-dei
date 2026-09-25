@@ -1,0 +1,260 @@
+{
+  "version": 2.0,
+  "questions": [
+    {
+      "question": "Q1. In an OAI-based 5G lab, which NF typically receives the UE's initial registration request?",
+      "answers": {
+        "a": "SMF",
+        "b": "UPF",
+        "c": "AMF",
+        "d": "PCF"
+      },
+      "explanations": {
+        "a": "Incorrect — SMF manages sessions, not UE registration.",
+        "b": "Incorrect — UPF handles user-plane traffic only.",
+        "c": "Correct — AMF receives the UE's initial NAS Registration Request.",
+        "d": "Incorrect — PCF handles QoS and policy decisions."
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Q2. Which protocol is used on the N4 interface between SMF and UPF for session/config control?",
+      "answers": {
+        "a": "NGAP",
+        "b": "PFCP",
+        "c": "GTP-C",
+        "d": "HTTP/2"
+      },
+      "explanations": {
+        "a": "Incorrect — NGAP is used between gNB and AMF on N2.",
+        "b": "Correct — PFCP is used on N4 for SMF–UPF control communication.",
+        "c": "Incorrect — GTP-C is used in LTE EPC, not 5G Core.",
+        "d": "Incorrect — HTTP/2 is used for service-based interfaces between control NFs."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Q3. When a PDU session is successfully created, which NF allocates the UE IP address?",
+      "answers": {
+        "a": "AMF",
+        "b": "SMF",
+        "c": "UDM",
+        "d": "NRF"
+      },
+      "explanations": {
+        "a": "Incorrect — AMF handles NAS signaling.",
+        "b": "Correct — SMF allocates the UE’s IP address during PDU session setup.",
+        "c": "Incorrect — UDM stores subscriber data.",
+        "d": "Incorrect — NRF manages NF discovery only."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Q4. Which interface carries user-plane GTP-U packets between RAN and UPF?",
+      "answers": {
+        "a": "N1",
+        "b": "N2",
+        "c": "N3",
+        "d": "N6"
+      },
+      "explanations": {
+        "a": "Incorrect — N1 is the NAS interface between UE and AMF.",
+        "b": "Incorrect — N2 is between gNB and AMF.",
+        "c": "Correct — N3 carries user-plane GTP-U traffic between gNB and UPF.",
+        "d": "Incorrect — N6 connects the UPF to external data networks."
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Q5. During the SBA experiment, which panel shows the logs such as 'NF started successfully'?",
+      "answers": {
+        "a": "NF List Panel",
+        "b": "Configuration Panel",
+        "c": "Logs Panel",
+        "d": "NRF Panel"
+      },
+      "explanations": {
+        "a": "Incorrect — NF List Panel only displays available NFs.",
+        "b": "Incorrect — Configuration Panel is for NF setup.",
+        "c": "Correct — The Logs Panel shows startup, status, and registration logs.",
+        "d": "Incorrect — NRF Panel is not a standard UI component in the simulator."
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Q6. Which NF is responsible for policy decisions (QoS, charging) provided to the SMF?",
+      "answers": {
+        "a": "UDM",
+        "b": "PCF",
+        "c": "AUSF",
+        "d": "NRF"
+      },
+      "explanations": {
+        "a": "Incorrect — UDM stores subscription data.",
+        "b": "Correct — PCF manages policy rules and QoS decisions.",
+        "c": "Incorrect — AUSF performs authentication.",
+        "d": "Incorrect — NRF handles service discovery."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Q7. When starting an NF in the SBA simulator, approximately how long should you wait for it to stabilize?",
+      "answers": {
+        "a": "1 second",
+        "b": "5 seconds",
+        "c": "30 seconds",
+        "d": "60 seconds"
+      },
+      "explanations": {
+        "a": "Incorrect — Too short for NF initialization.",
+        "b": "Correct — NFs typically take around 5 seconds to stabilize.",
+        "c": "Incorrect — 30 seconds is unnecessary in simulated environment.",
+        "d": "Incorrect — No NF in SBA requires 1 minute to stabilize."
+      },
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "Q8. Which log entry indicates that an NF is fully ready after startup?",
+      "answers": {
+        "a": "NRF discovery failed",
+        "b": "Initialization pending",
+        "c": "NF ready to accept connections",
+        "d": "Port not configured"
+      },
+      "explanations": {
+        "a": "Incorrect — This indicates a problem.",
+        "b": "Incorrect — Initialization is not complete.",
+        "c": "Correct — This means the NF has fully booted and is operational.",
+        "d": "Incorrect — This indicates an error."
+      },
+      "correctAnswer": "c",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "Q9. Which interface is used by AMF to communicate NAS messages to the UE?",
+      "answers": {
+        "a": "N1",
+        "b": "N2",
+        "c": "N3",
+        "d": "N4"
+      },
+      "explanations": {
+        "a": "Correct — NAS signaling is carried between AMF and UE over N1.",
+        "b": "Incorrect — N2 is for gNB-AMF control-plane signaling.",
+        "c": "Incorrect — N3 is for user-plane traffic.",
+        "d": "Incorrect — N4 connects SMF and UPF."
+      },
+      "correctAnswer": "a",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Q10. During PDU session setup, the SMF instructs the UPF to create forwarding rules using:",
+      "answers": {
+        "a": "NGAP messages",
+        "b": "PFCP Session Establishment Request",
+        "c": "DHCP Discover",
+        "d": "HTTP POST to the UPF"
+      },
+      "explanations": {
+        "a": "Incorrect — NGAP is used for AMF ↔ gNB signaling.",
+        "b": "Correct — SMF configures UPF using PFCP messages.",
+        "c": "Incorrect — DHCP is not used in PDU session creation.",
+        "d": "Incorrect — SMF does not use HTTP to configure UPF."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Q11. Which function maintains subscriber profile and subscription data used during session setup?",
+      "answers": {
+        "a": "NRF",
+        "b": "UDM",
+        "c": "AUSF",
+        "d": "PCF"
+      },
+      "explanations": {
+        "a": "Incorrect — NRF manages NF discovery.",
+        "b": "Correct — UDM stores subscription data and UE profiles.",
+        "c": "Incorrect — AUSF performs authentication validation.",
+        "d": "Incorrect — PCF handles policy control."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Q12. Lawful interception and deep packet inspection are performed in which NF?",
+      "answers": {
+        "a": "AMF",
+        "b": "PCF",
+        "c": "UPF",
+        "d": "SMF"
+      },
+      "explanations": {
+        "a": "Incorrect — AMF handles signaling only.",
+        "b": "Incorrect — PCF defines policies.",
+        "c": "Correct — UPF can perform DPI, filtering, and traffic routing.",
+        "d": "Incorrect — SMF creates traffic rules but UPF enforces them."
+      },
+      "correctAnswer": "c",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "Q13. The NRF’s main purpose in SBA is to:",
+      "answers": {
+        "a": "Forward user traffic",
+        "b": "Allocate IP addresses",
+        "c": "Provide service discovery and registration of NFs",
+        "d": "Enforce QoS rules"
+      },
+      "explanations": {
+        "a": "Incorrect — UPF forwards traffic.",
+        "b": "Incorrect — SMF allocates IP addresses.",
+        "c": "Correct — NRF registers NFs and enables service discovery.",
+        "d": "Incorrect — PCF enforces QoS policies."
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Q14. In the SBA simulator, which command is used inside the NF terminal to test connectivity?",
+      "answers": {
+        "a": "trace",
+        "b": "status",
+        "c": "ping",
+        "d": "scan"
+      },
+      "explanations": {
+        "a": "Incorrect — Not a connectivity test command.",
+        "b": "Incorrect — Shows NF status, not connectivity.",
+        "c": "Correct — ping is used to verify reachability of other NFs.",
+        "d": "Incorrect — scan is not used for NF communication testing."
+      },
+      "correctAnswer": "c",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "Q15. What does 'Packet Loss: 0%' indicate during the ping test between NFs?",
+      "answers": {
+        "a": "One NF is malfunctioning",
+        "b": "Both NFs are unreachable",
+        "c": "NFs have perfect connectivity",
+        "d": "IP configuration is invalid"
+      },
+      "explanations": {
+        "a": "Incorrect — A malfunction would cause packet loss.",
+        "b": "Incorrect — Unreachability would result in 100% packet loss.",
+        "c": "Correct — 0% packet loss means stable and successful NF-to-NF connectivity.",
+        "d": "Incorrect — Invalid IP results in ping errors, not 0% loss."
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    }
+  ]
+}
